@@ -3,9 +3,11 @@ package dev.mentoria.lojavirtual_mentoria.model;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
+
 @Entity
 @Table(name = "categoria_produto")
-public class CategoriaProduto {
+public class CategoriaProduto implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
