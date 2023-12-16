@@ -4,13 +4,17 @@ package dev.mentoria.lojavirtual_mentoria.model;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-@MappedSuperclass
+@Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@SequenceGenerator(name = "seq_pessoa", sequenceName = "seq_pessoa", initialValue = 1, allocationSize = 1)
 public class Pessoa implements Serializable {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_pessoa")
     private Long id;
 
     private String nome;
@@ -18,6 +22,10 @@ public class Pessoa implements Serializable {
     private String email;
 
     private String telefone;
+
+    @OneToMany(mappedBy = "pessoa", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    // pessoa é o campo de endereços que vai ser mapeado, a Classe Endereço possui Pessoa 'pessoa'
+    private List<Endereco> enderecos = new ArrayList<Endereco>();
 
 
     @Override
@@ -33,6 +41,14 @@ public class Pessoa implements Serializable {
     @Override
     public int hashCode() {
         return getId().hashCode();
+    }
+
+    public List<Endereco> getEnderecos() {
+        return enderecos;
+    }
+
+    public void setEnderecos(List<Endereco> enderecos) {
+        this.enderecos = enderecos;
     }
 
     public String getNome() {
