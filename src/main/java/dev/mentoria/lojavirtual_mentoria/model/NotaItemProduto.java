@@ -6,8 +6,8 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "avaliacao_produto")
-public class AvaliacaoProduto implements Serializable {
+@Table(name = "nota_item_produto")
+public class NotaItemProduto implements Serializable {
 
 
     @Id
@@ -15,24 +15,17 @@ public class AvaliacaoProduto implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
 
-
-    @Column(columnDefinition = "text", nullable = false)
-    private String descricao;
-
-
     @Column(nullable = false)
-    private Integer nota;
+    private Double quantidade;
 
-    @ManyToOne(targetEntity = Pessoa.class)
-    @JoinColumn(name = "pessoa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_fk"))
-    private Pessoa pessoa;
-    // muitas avaliações para uma pessoa
+    @ManyToOne(targetEntity = NotaFiscalCompra.class)
+    @JoinColumn(name = "nota_fiscal_compra_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "nota_fiscal_compra_fk"))
+    private NotaFiscalCompra notaFiscalCompra;
+
 
     @ManyToOne(targetEntity = Produto.class)
     @JoinColumn(name = "produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "produto_fk"))
     private Produto produto;
-    // muitas avaliações para um produto
-
 
     public Long getId() {
         return id;
@@ -42,28 +35,20 @@ public class AvaliacaoProduto implements Serializable {
         this.id = id;
     }
 
-    public String getDescricao() {
-        return descricao;
+    public Double getQuantidade() {
+        return quantidade;
     }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
+    public void setQuantidade(Double quantidade) {
+        this.quantidade = quantidade;
     }
 
-    public Integer getNota() {
-        return nota;
+    public NotaFiscalCompra getNotaFiscalCompra() {
+        return notaFiscalCompra;
     }
 
-    public void setNota(Integer nota) {
-        this.nota = nota;
-    }
-
-    public Pessoa getPessoa() {
-        return pessoa;
-    }
-
-    public void setPessoa(Pessoa pessoa) {
-        this.pessoa = pessoa;
+    public void setNotaFiscalCompra(NotaFiscalCompra notaFiscalCompra) {
+        this.notaFiscalCompra = notaFiscalCompra;
     }
 
     public Produto getProduto() {
@@ -77,7 +62,7 @@ public class AvaliacaoProduto implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof AvaliacaoProduto that)) return false;
+        if (!(o instanceof NotaItemProduto that)) return false;
 
         return getId() != null ? getId().equals(that.getId()) : that.getId() == null;
     }

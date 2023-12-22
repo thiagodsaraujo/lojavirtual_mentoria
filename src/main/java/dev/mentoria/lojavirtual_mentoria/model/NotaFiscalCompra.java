@@ -17,20 +17,25 @@ public class NotaFiscalCompra implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
 
-
+    @Column(nullable = false)
     private String numeroNota;
 
+    @Column(nullable = false)
     private String serieNota;
 
     private String descricaoObs;
 
+    @Column(nullable = false)
     private BigDecimal valorTotal;
+
 
     private BigDecimal valorDesconto;
 
+    @Column(nullable = false)
     private BigDecimal valorIcms;
 
     @Temporal(TemporalType.DATE)
+    @Column(nullable = false)
     private Date dataCompra;
 
     //usamos o targetEntity aqui para ajudar o JPA a saber qual classe de destino pois é uma herança

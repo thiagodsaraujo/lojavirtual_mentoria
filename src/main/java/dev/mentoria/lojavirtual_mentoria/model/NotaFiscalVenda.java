@@ -15,16 +15,19 @@ public class NotaFiscalVenda implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Column(nullable = false)
     private String numero;
 
+    @Column(nullable = false)
     private String serie;
 
+    @Column(nullable = false)
     private String tipo;
 
-    @Column(columnDefinition = "text")
+    @Column(columnDefinition = "text", nullable = false)
     private String xml;
 
-    @Column(columnDefinition = "text")
+    @Column(columnDefinition = "text", nullable = false)
     private String pdf;
 
     @OneToOne

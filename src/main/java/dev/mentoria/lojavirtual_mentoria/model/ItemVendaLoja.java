@@ -16,6 +16,7 @@ public class ItemVendaLoja implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Column(nullable = false)
     private Double quantidade;
 
     @ManyToOne(targetEntity = Produto.class)

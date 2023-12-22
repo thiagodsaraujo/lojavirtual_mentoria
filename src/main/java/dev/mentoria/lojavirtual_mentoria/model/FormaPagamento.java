@@ -14,6 +14,7 @@ public class FormaPagamento implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Column(nullable = false)
     private String descricao;
 
     public String getDescricao() {

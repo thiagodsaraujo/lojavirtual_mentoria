@@ -15,37 +15,48 @@ public class Produto implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Column(nullable = false)
     private String tipoUnidade;
 
+    @Column(nullable = false)
     private String nome;
 
-    @Column(columnDefinition = "text", length = 2000)
+    @Column(columnDefinition = "text", length = 2000, nullable = false)
     private String descricao;
 
     // TODO NotaItemProduto - Associar com essa classe
 
+    @Column(nullable = false)
     private Double peso;
 
 
+    @Column(nullable = false)
     private Double largura;
 
+    @Column(nullable = false)
     private Double altura;
 
+    @Column(nullable = false)
     private Boolean ativo = Boolean.TRUE;
 
+    @Column(nullable = false)
     private Double profundidade;
 
+    @Column(nullable = false)
     private BigDecimal valorVenda = BigDecimal.ZERO;
 
+    @Column(nullable = false)
     private Integer qtdEstoque = 0;
 
+    @Column(name = "alerta_qtde_estoque")
     private Integer qtdeAlertaEstoque = 0;
 
     private String linkYoutube;
 
     private Boolean alertaQtdEstoque = Boolean.FALSE;
 
-    private Integer qtdClique = 0;
+    @Column(name = "qtde_clique")
+    private Integer qtdeClique = 0;
 
     public Long getId() {
         return id;
@@ -160,11 +171,11 @@ public class Produto implements Serializable {
     }
 
     public Integer getQtdClique() {
-        return qtdClique;
+        return qtdeClique;
     }
 
     public void setQtdClique(Integer qtdClique) {
-        this.qtdClique = qtdClique;
+        this.qtdeClique = qtdClique;
     }
 
     @Override

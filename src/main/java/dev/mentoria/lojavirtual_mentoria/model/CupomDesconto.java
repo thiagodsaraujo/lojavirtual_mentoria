@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
-@Table(name = "cupom")
+@Table(name = "cup_desc")
 public class CupomDesconto implements Serializable {
 
 
@@ -17,13 +17,16 @@ public class CupomDesconto implements Serializable {
     private Long id;
 
 
+    @Column(nullable = false)
     private String codigoCupom;
+
 
     private BigDecimal valorRealDesconto;
 
     private BigDecimal valorPorcentDesconto;
 
     @Temporal(TemporalType.DATE)
+    @Column(nullable = false)
     private Date dataValidadeCupom;
 
 
