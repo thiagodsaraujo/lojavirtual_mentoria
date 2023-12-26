@@ -61,6 +61,14 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>5.9.2</version>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -77,6 +85,13 @@
 					</excludes>
 				</configuration>
 			</plugin>
+
+<!--			Se PARAR DE FUNCIONAR TENTAR RODAR COM ESSE PLUGIN ABAIXO-->
+<!--			<plugin>-->
+<!--				<groupId>org.apache.maven.plugins</groupId>-->
+<!--				<artifactId>maven-resources-plugin</artifactId>-->
+<!--				<version>3.1.0</version>-->
+<!--			</plugin>-->
 		</plugins>
 	</build>
 
