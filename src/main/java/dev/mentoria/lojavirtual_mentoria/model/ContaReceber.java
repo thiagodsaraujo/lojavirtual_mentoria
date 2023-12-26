@@ -2,8 +2,8 @@ package dev.mentoria.lojavirtual_mentoria.model;
 
 
 import dev.mentoria.lojavirtual_mentoria.model.enums.StatusContaReceber;
-import jakarta.persistence.*;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;

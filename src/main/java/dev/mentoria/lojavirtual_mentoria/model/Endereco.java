@@ -2,8 +2,8 @@ package dev.mentoria.lojavirtual_mentoria.model;
 
 
 import dev.mentoria.lojavirtual_mentoria.model.enums.TipoEndereco;
-import jakarta.persistence.*;
 
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity

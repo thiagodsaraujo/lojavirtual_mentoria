@@ -2,8 +2,9 @@ package dev.mentoria.lojavirtual_mentoria.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
+
+import javax.persistence.*;
 
 
 @Entity

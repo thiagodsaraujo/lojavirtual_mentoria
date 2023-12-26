@@ -1,7 +1,10 @@
 package dev.mentoria.lojavirtual_mentoria.model;
 
-import jakarta.persistence.*;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
 
