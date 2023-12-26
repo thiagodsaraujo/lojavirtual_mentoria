@@ -1,6 +1,7 @@
 package dev.mentoria.lojavirtual_mentoria.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -34,6 +35,7 @@ public class Acesso implements GrantedAuthority {
     }
 
     @Override
+    @JsonIgnore // colocar isso pois nao existe setAutority
     public String getAuthority() {
         return this.descricao;
     }

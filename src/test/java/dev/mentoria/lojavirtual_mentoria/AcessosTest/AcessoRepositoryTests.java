@@ -36,7 +36,7 @@ public class AcessoRepositoryTests {
     @DisplayName("Single test successful")
     public void testCadastrarAcesso() {
 
-        var roleSupervirsor2 = "ROLE_SUPERVIRSOR2";
+        var roleSupervirsor2 = "ROLE_USUARIO";
         Acesso acesso01 = new Acesso(roleSupervirsor2);
 
         acessoController.salvarAcesso(acesso01).getBody();
@@ -58,6 +58,8 @@ public class AcessoRepositoryTests {
 
         var id = 1;
         var acesso = acessoRepository.findById((long) id).get();
+
+        System.out.println(acesso.getDescricao());
 
         assertEquals(acesso.getId(), id);
 
