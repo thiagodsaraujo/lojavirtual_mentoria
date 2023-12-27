@@ -24,6 +24,9 @@ public abstract class Pessoa implements Serializable {
     private String email;
 
     @Column(nullable = false)
+    private String tipoPessoa;
+
+    @Column(nullable = false)
     private String telefone;
 
     @OneToMany(mappedBy = "pessoa", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -60,6 +63,14 @@ public abstract class Pessoa implements Serializable {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public String getTipoPessoa() {
+        return tipoPessoa;
+    }
+
+    public void setTipoPessoa(String tipoPessoa) {
+        this.tipoPessoa = tipoPessoa;
     }
 
     public String getEmail() {
