@@ -36,7 +36,7 @@ public class Usuario implements UserDetails {
     private Pessoa pessoa;
 
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "usuarios_acessos",
             uniqueConstraints = @UniqueConstraint(columnNames = {"usuario_id", "acesso_id"},
