@@ -4,8 +4,10 @@ package dev.mentoria.lojavirtual_mentoria.security;
 import dev.mentoria.lojavirtual_mentoria.ApplicationContextLoad;
 import dev.mentoria.lojavirtual_mentoria.model.Usuario;
 import dev.mentoria.lojavirtual_mentoria.repository.UsuarioRepository;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -64,46 +67,63 @@ public class JWTTokenAutenticacaoService {
     }
 
     // Método - Retorna o Usuário validade com token ou caso na seja valido retorna null
-    public Authentication getAuthentication(HttpServletRequest request, HttpServletResponse response){
+    public Authentication getAuthentication(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
 
         String token = request.getHeader(HEADER_STRING);
 
-        if (token != null){
-            // se não for null - retorna o usuario
-            // tem que retirar o token limpo, retirar o header
 
-            String tokenLimpo = token.replace(TOKEN_PREFIX, "").trim();
+        try {
 
-            // Faz a validação do token do usuario na requisição
+            if (token != null) {
+                // se não for null - retorna o usuario
+                // tem que retirar o token limpo, retirar o header
 
-            String user = Jwts.parser().setSigningKey(SECRET)
-                    .parseClaimsJws(tokenLimpo)
-                    .getBody()
-                    .getSubject(); // Admin ou o outro usuario
+                String tokenLimpo = token.replace(TOKEN_PREFIX, "").trim();
 
-            if (user != null){
+                // Faz a validação do token do usuario na requisição
+
+                String user = Jwts.parser().setSigningKey(SECRET)
+                        .parseClaimsJws(tokenLimpo)
+                        .getBody()
+                        .getSubject(); // Admin ou o outro usuario
+
+                if (user != null) {
 //              Pesquisou no banco se o usuario realmente existe
 
-                Usuario usuario = ApplicationContextLoad
-                .getApplicationContext()
-                        .getBean(UsuarioRepository.class)
-                        .findUsuarioByLogin(user);
+                    Usuario usuario = ApplicationContextLoad
+                            .getApplicationContext()
+                            .getBean(UsuarioRepository.class)
+                            .findUsuarioByLogin(user);
 
-                if (usuario != null){
+                    if (usuario != null) {
 //                  Retornou para o spring fazer o trabalho de autorização dele
-                    return new UsernamePasswordAuthenticationToken(usuario.getLogin(),
-                            usuario.getPassword(),
-                            usuario.getAuthorities());
+                        return new UsernamePasswordAuthenticationToken(usuario.getLogin(),
+                                usuario.getPassword(),
+                                usuario.getAuthorities());
+
+                    }
 
                 }
 
             }
+        } catch (SignatureException e){
+            response.getWriter().write("Token está inválido");
 
+        } catch (ExpiredJwtException e){
+            // O token está expirado
+            response.getWriter().write("Token está expirado, efetue o login novamente!");
 
+            // Remover o token inválido (opcional)
+            // Você pode adicionar lógica aqui para remover o token do usuário ou tomar outras medidas necessárias.
 
+            // Redirecionar para a página de login - Testar se realmente ta funcionando esse login
+            response.sendRedirect("/login");
+        }
+        finally {
+            liberacaoCors(response);
         }
 
-        liberacaoCors(response);
         return null;
     }
 
