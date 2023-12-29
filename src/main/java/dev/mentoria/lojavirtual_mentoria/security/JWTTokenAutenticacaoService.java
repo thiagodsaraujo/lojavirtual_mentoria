@@ -4,10 +4,7 @@ package dev.mentoria.lojavirtual_mentoria.security;
 import dev.mentoria.lojavirtual_mentoria.ApplicationContextLoad;
 import dev.mentoria.lojavirtual_mentoria.model.Usuario;
 import dev.mentoria.lojavirtual_mentoria.repository.UsuarioRepository;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -119,8 +116,16 @@ public class JWTTokenAutenticacaoService {
 
             // Redirecionar para a página de login - Testar se realmente ta funcionando esse login
             response.sendRedirect("/login");
-        }
-        finally {
+
+        } catch (MalformedJwtException e) {
+            response.getWriter().write("Token JWT mal formado");
+        } catch (PrematureJwtException e) {
+            response.getWriter().write("Token JWT processado antes do momento válido");
+        } catch (UnsupportedJwtException e) {
+            response.getWriter().write("Token JWT contém partes não suportadas ou não permitidas");
+        } catch (IllegalArgumentException e) {
+            response.getWriter().write("Argumento inválido ao processar o token JWT");
+        } finally {
             liberacaoCors(response);
         }
 
