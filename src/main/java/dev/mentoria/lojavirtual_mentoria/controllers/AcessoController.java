@@ -1,6 +1,7 @@
 package dev.mentoria.lojavirtual_mentoria.controllers;
 
 
+import dev.mentoria.lojavirtual_mentoria.ExceptionMentoriaJava;
 import dev.mentoria.lojavirtual_mentoria.model.Acesso;
 import dev.mentoria.lojavirtual_mentoria.repository.AcessoRepository;
 import dev.mentoria.lojavirtual_mentoria.service.AcessoService;
@@ -27,7 +28,17 @@ public class AcessoController {
 
     @ResponseBody // * Poder dar um retorno da API //
     @PostMapping(value = "/salvarAcesso") // Mapeando a url para receber JSON, DE QUALQUER LUGAR QUE VIER O SALVARACESSO VAI SALVAR COM OS DOIS ** ANTES DA /
-    public ResponseEntity<Acesso> salvarAcesso(@RequestBody Acesso acesso){ //Recebe o JSON e converte para o Objeto
+    public ResponseEntity<Acesso> salvarAcesso(@RequestBody Acesso acesso) throws ExceptionMentoriaJava { //Recebe o JSON e converte para o Objeto
+
+        // verificar se existe acesso com a descrição já cadastrada
+        if (acesso.getId() == null){
+            List<Acesso> acessos = acessoRepository.buscarAcessoPorDescricao(acesso.getDescricao().toUpperCase());
+
+            if (!acessos.isEmpty()){
+                throw new ExceptionMentoriaJava("Já existe Acesso com a descrição: " + acesso.getDescricao());
+            }
+        }
+
 
         Acesso acessoSalvo = acessoService.save(acesso);
 
@@ -47,18 +58,22 @@ public class AcessoController {
     @GetMapping(value = "/buscarPorDesc/{desc}")
     public ResponseEntity<List<Acesso>> buscarPorDesc(@PathVariable("desc") String desc){
 
-        var acesso = acessoRepository.buscarAcessoPorDescricao(desc);
+        var acesso = acessoRepository.buscarAcessoPorDescricao(desc.toUpperCase());
 
         return new ResponseEntity<>(acesso, HttpStatus.OK);
     }
 
     @ResponseBody
     @GetMapping(value = "/obterAcesso/{id}")
-    private ResponseEntity<Acesso> obterAcesso(@PathVariable("id") Long id){
+    private ResponseEntity<Acesso> obterAcesso(@PathVariable("id") Long id) throws ExceptionMentoriaJava {
 
-        var acessoById = acessoRepository.findById(id);
+        var acessoById = acessoRepository.findById(id).orElse(null);
 
-        return new ResponseEntity<Acesso>(acessoById.get(), HttpStatus.OK);
+        if (acessoById == null){
+            throw new ExceptionMentoriaJava("Não existe Acesso com o ID: " + id);
+        }
+
+        return new ResponseEntity<Acesso>(acessoById, HttpStatus.OK);
     }
 
 

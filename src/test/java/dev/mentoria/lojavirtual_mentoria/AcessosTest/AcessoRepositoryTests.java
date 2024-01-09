@@ -1,5 +1,6 @@
 package dev.mentoria.lojavirtual_mentoria.AcessosTest;
 
+import dev.mentoria.lojavirtual_mentoria.ExceptionMentoriaJava;
 import dev.mentoria.lojavirtual_mentoria.controllers.AcessoController;
 import dev.mentoria.lojavirtual_mentoria.model.Acesso;
 import dev.mentoria.lojavirtual_mentoria.repository.AcessoRepository;
@@ -34,7 +35,7 @@ public class AcessoRepositoryTests {
 
     @Test
     @DisplayName("Single test successful")
-    public void testCadastrarAcesso() {
+    public void testCadastrarAcesso() throws ExceptionMentoriaJava {
 
         var roleSupervirsor2 = "ROLE_USUARIO";
         Acesso acesso01 = new Acesso(roleSupervirsor2);

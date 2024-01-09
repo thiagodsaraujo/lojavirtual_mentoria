@@ -24,6 +24,27 @@ import java.util.List;
 public class ControllerExcecoes extends ResponseEntityExceptionHandler {
 
 
+    @ExceptionHandler(ExceptionMentoriaJava.class)
+    public ResponseEntity<Object> handleExceptionInternalCustom(ExceptionMentoriaJava ex){
+        ObjetoErroDTO objetoErroDTO = new ObjetoErroDTO();
+
+        objetoErroDTO.setError(ex.getMessage());
+        objetoErroDTO.setCode(HttpStatus.OK.toString());
+
+        return new ResponseEntity<Object>(objetoErroDTO, HttpStatus.OK);
+
+    }
+
+//    @ExceptionHandler(ExceptionMentoriaJava.class)
+//    public ResponseEntity<ObjetoErroDTO> handleExceptionMentoriaJava(ExceptionMentoriaJava ex) {
+//        ObjetoErroDTO objetoErroDTO = new ObjetoErroDTO();
+//        objetoErroDTO.setError(ex.getMessage());
+//        objetoErroDTO.setCode(HttpStatus.OK.toString());
+//
+//        return ResponseEntity.status(HttpStatus.OK).body(objetoErroDTO);
+//    }
+
+
 //    Captura exceções do projeto
     @Override
     @ExceptionHandler({Exception.class, RuntimeException.class, Throwable.class})
@@ -46,7 +67,8 @@ public class ControllerExcecoes extends ResponseEntityExceptionHandler {
         }
 
         objetoErroDTO.setError(msg);
-        objetoErroDTO.setCode(status.value() + "===>" + status.getReasonPhrase());
+
+        objetoErroDTO.setCode(status.value() + " ===> " + status.getReasonPhrase());
 
 
         return new ResponseEntity<Object>(objetoErroDTO, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -111,6 +133,7 @@ public class ControllerExcecoes extends ResponseEntityExceptionHandler {
 //        return new ResponseEntity<Object>(objetoErroDTO, HttpStatus.INTERNAL_SERVER_ERROR);
 //
 //    }
+
 
 
 
