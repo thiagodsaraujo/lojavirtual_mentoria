@@ -28,10 +28,17 @@ public class PessoaUserService {
     }
 
 
-    public PessoaJuridica salvarPessoaJuridica(PessoaJuridica pessoaJuridica) {
+    public PessoaJuridica salvarPessoaJuridica(PessoaJuridica juridica) {
 
         // Validações já foram feitas no controller e pode salvar
-        var juridica = juridicaRepository.save(pessoaJuridica);
+//        var juridica = juridicaRepository.save(juridica);
+
+        for (int i = 0; i< juridica.getEnderecos().size(); i++){
+            juridica.getEnderecos().get(i).setPessoa(juridica);
+            juridica.getEnderecos().get(i).setEmpresa(juridica);
+        }
+
+        juridica = juridicaRepository.save(juridica);
 
         // faz a verificação se já existe Usuario referente a PJ
         Usuario usuarioPj = usuarioRepository.findUserByPessoa(juridica.getId(), juridica.getEmail());
@@ -64,6 +71,8 @@ public class PessoaUserService {
             usuarioRepository.save(novoUsuario);
 
             usuarioRepository.insereAcessoUserPj(novoUsuario.getId());
+
+            // Fazer o envio do e-mail do login e da senha
 
 
 
