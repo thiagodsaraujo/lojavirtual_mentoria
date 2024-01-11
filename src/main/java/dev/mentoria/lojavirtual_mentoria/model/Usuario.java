@@ -21,7 +21,7 @@ public class Usuario implements UserDetails {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String login;
 
     @Column(nullable = false)
@@ -34,6 +34,10 @@ public class Usuario implements UserDetails {
     @ManyToOne(targetEntity = Pessoa.class)
     @JoinColumn(name = "pessoa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_fk"))
     private Pessoa pessoa;
+
+    @ManyToOne(targetEntity = Pessoa.class)
+    @JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_fk"))
+    private Pessoa empresa;
 
 
     @OneToMany(fetch = FetchType.EAGER)
@@ -48,6 +52,8 @@ public class Usuario implements UserDetails {
 
     )
     private List<Acesso> acessos;
+
+
 
     public Long getId() {
         return id;
@@ -125,6 +131,14 @@ public class Usuario implements UserDetails {
         this.pessoa = pessoa;
     }
 
+    public Pessoa getEmpresa() {
+        return empresa;
+    }
+
+    public void setEmpresa(Pessoa empresa) {
+        this.empresa = empresa;
+    }
+
     public List<Acesso> getAcessos() {
         return acessos;
     }
@@ -132,6 +146,8 @@ public class Usuario implements UserDetails {
     public void setAcessos(List<Acesso> acessos) {
         this.acessos = acessos;
     }
+
+
 
     @Override
     public boolean equals(Object o) {

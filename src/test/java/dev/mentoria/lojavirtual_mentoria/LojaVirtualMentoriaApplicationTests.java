@@ -5,12 +5,14 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.mentoria.lojavirtual_mentoria.controllers.AcessoController;
 import dev.mentoria.lojavirtual_mentoria.model.Acesso;
+import dev.mentoria.lojavirtual_mentoria.model.PessoaJuridica;
 import dev.mentoria.lojavirtual_mentoria.repository.AcessoRepository;
-import dev.mentoria.lojavirtual_mentoria.service.AcessoService;
+import dev.mentoria.lojavirtual_mentoria.repository.PessoaJuridicaRepository;
+import dev.mentoria.lojavirtual_mentoria.service.PessoaUserService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -38,6 +40,12 @@ public class LojaVirtualMentoriaApplicationTests {
 
     @Autowired
     private WebApplicationContext wac;
+
+    @Autowired
+    private PessoaUserService pessoaUserService;
+
+    @Autowired
+    private PessoaJuridicaRepository juridicaRepository;
 
     /*Teste do end-point de salvar*/
     @Test
@@ -205,6 +213,36 @@ public class LojaVirtualMentoriaApplicationTests {
 
 
         acessoRepository.deleteById(acesso.getId());
+
+    }
+
+
+    @Test
+    @DisplayName("Single test successful")
+    public void testCadastrarPessoaFisica(){
+
+        PessoaJuridica pessoaJuridica = new PessoaJuridica();
+
+        pessoaJuridica.setCnpj("123456789");
+        pessoaJuridica.setNome("Empresa Luffy");
+        pessoaJuridica.setEmail("luffy@gmail.com");
+        pessoaJuridica.setTelefone("123456789012");
+        pessoaJuridica.setInscEstadual("1234");
+        pessoaJuridica.setInscMunicipal("12345");
+        pessoaJuridica.setNomeFantasia("NomeFantasia");
+
+        juridicaRepository.save(pessoaJuridica);
+
+
+
+        //        PessoaFisica pessoaFisica = new PessoaFisica();
+//
+//
+//        pessoaFisica.setCpf("123456789");
+//        pessoaFisica.setNome("Monkey Luffy");
+//        pessoaFisica.setEmail("luffy@gmail.com");
+//        pessoaFisica.setTelefone("123456789012");
+//        pessoaFisica.setEmpresa();
 
     }
 

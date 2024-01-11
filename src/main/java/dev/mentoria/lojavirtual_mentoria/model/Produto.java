@@ -58,6 +58,30 @@ public class Produto implements Serializable {
     @Column(name = "qtde_clique")
     private Integer qtdeClique = 0;
 
+
+    @ManyToOne(targetEntity = Pessoa.class)
+    @JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
+    private Pessoa empresa;
+
+
+    public Pessoa getEmpresa() {
+        return empresa;
+    }
+
+    public void setEmpresa(Pessoa empresa) {
+        this.empresa = empresa;
+    }
+
+    //
+
+    public Integer getQtdeClique() {
+        return qtdeClique;
+    }
+
+    public void setQtdeClique(Integer qtdeClique) {
+        this.qtdeClique = qtdeClique;
+    }
+
     public Long getId() {
         return id;
     }

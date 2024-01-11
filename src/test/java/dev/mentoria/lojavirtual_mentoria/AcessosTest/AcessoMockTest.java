@@ -1,6 +1,7 @@
 package dev.mentoria.lojavirtual_mentoria.AcessosTest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.mentoria.lojavirtual_mentoria.ExceptionMentoriaJava;
 import dev.mentoria.lojavirtual_mentoria.controllers.AcessoController;
 import dev.mentoria.lojavirtual_mentoria.model.Acesso;
 import dev.mentoria.lojavirtual_mentoria.service.AcessoService;
@@ -50,7 +51,7 @@ public class AcessoMockTest {
 
     @Test
     @Transactional
-    void testSalvarAcesso() {
+    void testSalvarAcesso() throws ExceptionMentoriaJava {
         Acesso acesso = new Acesso();
         acesso.setDescricao("ROLE_USUARIO");
 

@@ -7,6 +7,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -62,7 +63,10 @@ public class ControllerExcecoes extends ResponseEntityExceptionHandler {
             for (ObjectError error : list){
                 msg+= error.getDefaultMessage() + "\n";
             }
-         } else {
+         } if (ex instanceof  HttpMessageNotReadableException){
+            msg = "Não está sendo enviado dados para o corpo da requisição";
+        }
+        else {
             msg = ex.getMessage();
         }
 
@@ -90,7 +94,10 @@ public class ControllerExcecoes extends ResponseEntityExceptionHandler {
             msg = "Erro de Violação de Chave Estrangeira do Banco: " + ((ConstraintViolationException) exception).getCause().getCause().getMessage();
         } else if (exception instanceof SQLGrammarException) {
             msg = "Erro de Gramática SQL: " + exception.getMessage();
-        } else {
+        }else if (exception instanceof HttpMessageNotReadableException){
+            msg = "É nécessário o envio do corpo da requisição!";
+        }
+        else {
             msg = "Erro no Banco de Dados: " + exception.getMessage();
         }
 
