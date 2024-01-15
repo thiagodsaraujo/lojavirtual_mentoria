@@ -43,8 +43,8 @@ public class PessoaUsuarioTests {
         PessoaJuridica pessoaJuridica = new PessoaJuridica();
 
         pessoaJuridica.setCnpj("" + cnpj);
-        pessoaJuridica.setNome("Alex fernando");
-        pessoaJuridica.setEmail("testesalddddvarpj2@gmail.com");
+        pessoaJuridica.setNome("Thiago Araújo");
+        pessoaJuridica.setEmail("thiagoaraujoadvg@gmail.com");
         pessoaJuridica.setTelefone("45999795800");
         pessoaJuridica.setInscEstadual("65556565656665");
         pessoaJuridica.setInscMunicipal("55554565656565");
