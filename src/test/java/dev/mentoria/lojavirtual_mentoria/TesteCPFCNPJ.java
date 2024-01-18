@@ -7,15 +7,15 @@ public class TesteCPFCNPJ {
 
     public static void main(String[] args){
 
-        var cnpj = ValidaCNPJ.isCNPJ("38.787.462/0001-73");
+        var cnpj = ValidaCNPJ.isCNPJ("38.787.469/0001-73");
         var cnpjImp = ValidaCNPJ.imprimeCNPJ("38.787.462/0001-73");
 
         System.out.println("CNPJ VÁLIDO: "+ cnpj);
-        System.out.println("CNPJ VÁLIDO: "+ cnpjImp);
+//        System.out.println("CNPJ VÁLIDO: "+ cnpjImp);
 
-        var cpf = ValidaCPF.isCPF("060.110.434-02");
+        var cpf = ValidaCPF.isCPF("060.110.434-09");
         var cpfImp = ValidaCPF.imprimeCPF("060.110.434-02");
         System.out.println("CPF VÁLIDO: " + cpf);
-        System.out.println("CPF VÁLIDO: " + cpfImp);
+//        System.out.println("CPF VÁLIDO: " + cpfImp);
     }
 }

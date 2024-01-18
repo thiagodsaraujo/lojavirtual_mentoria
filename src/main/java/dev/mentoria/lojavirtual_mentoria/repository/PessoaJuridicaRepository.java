@@ -1,6 +1,7 @@
 package dev.mentoria.lojavirtual_mentoria.repository;
 
 import dev.mentoria.lojavirtual_mentoria.model.Pessoa;
+import dev.mentoria.lojavirtual_mentoria.model.PessoaFisica;
 import dev.mentoria.lojavirtual_mentoria.model.PessoaJuridica;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

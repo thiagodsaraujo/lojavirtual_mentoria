@@ -3,18 +3,18 @@ package dev.mentoria.lojavirtual_mentoria;
 
 import dev.mentoria.lojavirtual_mentoria.controllers.PessoaController;
 import dev.mentoria.lojavirtual_mentoria.model.Endereco;
+import dev.mentoria.lojavirtual_mentoria.model.PessoaFisica;
 import dev.mentoria.lojavirtual_mentoria.model.PessoaJuridica;
 import dev.mentoria.lojavirtual_mentoria.model.enums.TipoEndereco;
-import dev.mentoria.lojavirtual_mentoria.model.enums.TipoPessoa;
+import dev.mentoria.lojavirtual_mentoria.repository.PessoaFisicaRepository;
+import dev.mentoria.lojavirtual_mentoria.repository.PessoaJuridicaRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.Rollback;
 
-import java.util.Calendar;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -27,6 +27,12 @@ public class PessoaUsuarioTests {
 
     @Autowired
     private PessoaController pessoaController;
+
+    @Autowired
+    private PessoaJuridicaRepository pessoaJuridicaRepository;
+
+    @Autowired
+    private PessoaFisicaRepository pessoaFisicaRepository;
 
 
 
@@ -91,6 +97,61 @@ public class PessoaUsuarioTests {
         }
 
         assertEquals(2, pessoaJuridica.getEnderecos().size());
+
+    }
+
+    @Test
+    public void testCadPessoaFisica() throws ExceptionMentoriaJava {
+
+        // Consultando e add a empresa para a pessoa.
+        // A ideia que seja um gerador de lojas virtuais(?) e o usuario é associado aquela empresa dessa loja
+        var empresaBanco = pessoaJuridicaRepository.existeCnpjCadastrado("476");
+
+
+        PessoaFisica pessoaFisica = new PessoaFisica();
+        pessoaFisica.setCpf("612.864.550-06");
+        pessoaFisica.setNome("Alex fernando3");
+        pessoaFisica.setEmail("alex.fe8554998912r9559nando.egidio@gmail.com");
+        pessoaFisica.setTelefone("459997958003121213121");
+        pessoaFisica.setEmpresa(empresaBanco);
+
+        Endereco endereco1 = new Endereco();
+        endereco1.setBairro("Jd Dias");
+        endereco1.setCep("556556565");
+        endereco1.setComplemento("Casa cinza");
+        endereco1.setNumero("389");
+        endereco1.setPessoa(pessoaFisica);
+        endereco1.setRuaLogradouro("Av. são joao sexto");
+        endereco1.setTipoEndereco(TipoEndereco.COBRANCA);
+        endereco1.setUf("PR");
+        endereco1.setCidade("Curitiba");
+        endereco1.setEmpresa(empresaBanco);
+
+
+        Endereco endereco2 = new Endereco();
+        endereco2.setBairro("Jd Maracana");
+        endereco2.setCep("7878778");
+        endereco2.setComplemento("Andar 4");
+        endereco2.setNumero("555");
+        endereco2.setPessoa(pessoaFisica);
+        endereco2.setRuaLogradouro("Av. maringá");
+        endereco2.setTipoEndereco(TipoEndereco.ENTREGA);
+        endereco2.setUf("PR");
+        endereco2.setCidade("Curitiba");
+        endereco2.setEmpresa(empresaBanco);
+
+        pessoaFisica.getEnderecos().add(endereco2);
+        pessoaFisica.getEnderecos().add(endereco1);
+
+        pessoaFisica = pessoaController.salvarPessoaFisica(pessoaFisica).getBody();
+
+        assertEquals(true, pessoaFisica.getId() > 0 );
+
+        for (Endereco endereco : pessoaFisica.getEnderecos()) {
+            assertEquals(true, endereco.getId() > 0);
+        }
+
+        assertEquals(2, pessoaFisica.getEnderecos().size());
 
     }
 
