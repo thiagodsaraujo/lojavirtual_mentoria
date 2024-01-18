@@ -59,6 +59,7 @@ public class PessoaUserService {
 
             Usuario novoUsuario = new Usuario();
 
+            // Amarrar o usuario a empresa que trabalham
             novoUsuario.setDataAtualSenha(Calendar.getInstance().getTime());
             novoUsuario.setEmpresa(juridica);
             novoUsuario.setPessoa(juridica);
@@ -75,12 +76,13 @@ public class PessoaUserService {
             usuarioRepository.save(novoUsuario);
 
             usuarioRepository.insereAcessoUserPj(novoUsuario.getId());
+            usuarioRepository.insereAcessoUserPj(novoUsuario.getId(), "ROLE_ADMIN");
 
             // Fazer o envio do e-mail do login e da senha
 
             StringBuilder mensagemHtml = new StringBuilder();
 
-            mensagemHtml.append("<!DOCTYPE html>\n" +
+            mensagemHtml.append(("<!DOCTYPE html>\n" +
                     "<html lang=\"en\">\n" +
                     "<head>\n" +
                     "    <meta charset=\"UTF-8\">\n" +
@@ -99,10 +101,11 @@ public class PessoaUserService {
                     "    <p>Por favor, mantenha essas informações em local seguro.</p>\n" +
                     "    <p>Atenciosamente,<br>Equipe da Sua Aplicação</p>\n" +
                     "</body>\n" +
-                    "</html>\n");
+                    "</html>\n"));
 
             try {
                 serviceSendEmail.enviarEmailHtmlOutlook("Acesso Gerado para Loja Virtual", String.valueOf(mensagemHtml), juridica.getEmail());
+//                serviceSendEmail.sendEmail(juridica.getEmail(), "Acesso Gerado para Loja Virtual", mensagemHtml.toString());
 
             } catch (Exception e){
                 e.printStackTrace();
