@@ -1,8 +1,11 @@
 package dev.mentoria.lojavirtual_mentoria.controllers;
 
 import dev.mentoria.lojavirtual_mentoria.ExceptionMentoriaJava;
+import dev.mentoria.lojavirtual_mentoria.model.Endereco;
 import dev.mentoria.lojavirtual_mentoria.model.PessoaFisica;
 import dev.mentoria.lojavirtual_mentoria.model.PessoaJuridica;
+import dev.mentoria.lojavirtual_mentoria.model.dto.CEPDto;
+import dev.mentoria.lojavirtual_mentoria.repository.EnderecoRepository;
 import dev.mentoria.lojavirtual_mentoria.repository.PessoaFisicaRepository;
 import dev.mentoria.lojavirtual_mentoria.repository.PessoaJuridicaRepository;
 import dev.mentoria.lojavirtual_mentoria.service.PessoaUserService;
@@ -25,10 +28,22 @@ public class PessoaController {
 
     private final PessoaFisicaRepository pessoaFisicaRepository;
 
-    public PessoaController(PessoaJuridicaRepository pessoaRepository, PessoaUserService pessoaUserService, PessoaFisicaRepository pessoaFisicaRepository) {
+
+    private final EnderecoRepository enderecoRepository;
+
+    public PessoaController(PessoaJuridicaRepository pessoaRepository, PessoaUserService pessoaUserService, PessoaFisicaRepository pessoaFisicaRepository, EnderecoRepository enderecoRepository) {
         this.pessoaRepository = pessoaRepository;
         this.pessoaUserService = pessoaUserService;
         this.pessoaFisicaRepository = pessoaFisicaRepository;
+        this.enderecoRepository = enderecoRepository;
+    }
+
+    @ResponseBody
+    @GetMapping(value = "/consultaCep/{cep}")
+    public ResponseEntity<CEPDto> consultaCep(@PathVariable("cep") String cep){
+
+        return new ResponseEntity<CEPDto>(pessoaUserService.consultaCep(cep), HttpStatus.OK);
+
     }
 
 
@@ -50,6 +65,41 @@ public class PessoaController {
 
         if (!ValidaCNPJ.isCNPJ(pessoaJuridica.getCnpj())){
             throw new ExceptionMentoriaJava("CNPJ Inválido!");
+        }
+
+        // Pessoa nova e cadastrar o endereço conforme o cep
+        if (pessoaJuridica.getId() == null || pessoaJuridica.getId() <= 0){
+
+            for (int p = 0 ; p < pessoaJuridica.getEnderecos().size(); p++){
+                // Para cada endereco e consultar o CEP
+                CEPDto cepDto = pessoaUserService.consultaCep(pessoaJuridica.getEnderecos().get(p).getCep());
+
+                pessoaJuridica.getEnderecos().get(p).setBairro(cepDto.getBairro());
+                pessoaJuridica.getEnderecos().get(p).setCidade(cepDto.getLocalidade());
+                pessoaJuridica.getEnderecos().get(p).setComplemento(cepDto.getComplemento());
+                pessoaJuridica.getEnderecos().get(p).setRuaLogradouro(cepDto.getLogradouro());
+                pessoaJuridica.getEnderecos().get(p).setUf(cepDto.getUf());
+
+            }
+
+            }
+        else { // Para atualizar se nao for pessoa nova
+
+            for (int p = 0 ; p < pessoaJuridica.getEnderecos().size(); p++){
+                Endereco enderecoTemp = enderecoRepository.findById(pessoaJuridica.getEnderecos().get(p).getId()).get();
+
+                if (!enderecoTemp.getCep().equals(pessoaJuridica.getEnderecos().get(p).getCep())){
+                    CEPDto cepDto = pessoaUserService.consultaCep(pessoaJuridica.getEnderecos().get(p).getCep());
+
+                    pessoaJuridica.getEnderecos().get(p).setBairro(cepDto.getBairro());
+                    pessoaJuridica.getEnderecos().get(p).setCidade(cepDto.getLocalidade());
+                    pessoaJuridica.getEnderecos().get(p).setComplemento(cepDto.getComplemento());
+                    pessoaJuridica.getEnderecos().get(p).setRuaLogradouro(cepDto.getLogradouro());
+                    pessoaJuridica.getEnderecos().get(p).setUf(cepDto.getUf());
+
+                }
+            }
+
         }
 
         // Não está enviando e-mail

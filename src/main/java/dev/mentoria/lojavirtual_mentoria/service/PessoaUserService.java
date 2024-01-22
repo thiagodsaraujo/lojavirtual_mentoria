@@ -4,6 +4,7 @@ package dev.mentoria.lojavirtual_mentoria.service;
 import dev.mentoria.lojavirtual_mentoria.model.PessoaFisica;
 import dev.mentoria.lojavirtual_mentoria.model.PessoaJuridica;
 import dev.mentoria.lojavirtual_mentoria.model.Usuario;
+import dev.mentoria.lojavirtual_mentoria.model.dto.CEPDto;
 import dev.mentoria.lojavirtual_mentoria.repository.PessoaFisicaRepository;
 import dev.mentoria.lojavirtual_mentoria.repository.PessoaJuridicaRepository;
 import dev.mentoria.lojavirtual_mentoria.repository.UsuarioRepository;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Calendar;
 
@@ -109,7 +111,7 @@ public class PessoaUserService {
                     "</html>\n"));
 
             try {
-                serviceSendEmail.enviarEmailHtmlOutlook("Acesso Gerado para Loja Virtual", String.valueOf(mensagemHtml), juridica.getEmail());
+//                serviceSendEmail.enviarEmailHtmlOutlook("Acesso Gerado para Loja Virtual", String.valueOf(mensagemHtml), juridica.getEmail());
 //                serviceSendEmail.sendEmail(juridica.getEmail(), "Acesso Gerado para Loja Virtual", mensagemHtml.toString());
 
             } catch (Exception e){
@@ -207,5 +209,9 @@ public class PessoaUserService {
         }
 
         return fisica;
+    }
+
+    public CEPDto consultaCep(String cep){
+        return new RestTemplate().getForEntity("https://viacep.com.br/ws/" + cep + "/json/", CEPDto.class).getBody();
     }
 }
