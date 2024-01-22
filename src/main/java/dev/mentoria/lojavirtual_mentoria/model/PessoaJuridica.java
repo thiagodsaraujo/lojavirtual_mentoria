@@ -1,6 +1,8 @@
 package dev.mentoria.lojavirtual_mentoria.model;
 
 
+import org.hibernate.validator.constraints.br.CNPJ;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
@@ -15,6 +17,7 @@ import java.util.Date;
 public class PessoaJuridica extends Pessoa implements Serializable {
 
 
+//    @CNPJ(message = "O CNPJ está inválido")
     @Column(nullable = false)
     private String cnpj;
 

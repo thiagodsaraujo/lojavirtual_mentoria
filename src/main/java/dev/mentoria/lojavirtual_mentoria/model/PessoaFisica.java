@@ -1,6 +1,8 @@
 package dev.mentoria.lojavirtual_mentoria.model;
 
 
+import org.hibernate.validator.constraints.br.CPF;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -12,6 +14,7 @@ import java.util.Date;
 public class PessoaFisica extends Pessoa implements Serializable {
 
 
+//    @CPF(message = "CPF está inválido!")
     @Column(nullable = false)
     private String cpf;
 

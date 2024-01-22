@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/pj")
 public class PessoaController {
@@ -59,7 +61,7 @@ public class PessoaController {
 
     @ResponseBody
     @PostMapping(value = "/salvarpf")
-    public ResponseEntity<PessoaFisica> salvarPessoaFisica(@RequestBody PessoaFisica pessoaFisica) throws ExceptionMentoriaJava {
+    public ResponseEntity<PessoaFisica> salvarPessoaFisica(@RequestBody @Valid PessoaFisica pessoaFisica) throws ExceptionMentoriaJava {
 
         if (pessoaFisica == null){
             throw new ExceptionMentoriaJava("Pessoa Fisica não pode ser nula");

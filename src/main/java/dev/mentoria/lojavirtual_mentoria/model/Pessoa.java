@@ -3,6 +3,10 @@ package dev.mentoria.lojavirtual_mentoria.model;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +21,15 @@ public abstract class Pessoa implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_pessoa")
     private Long id;
 
+
+    @Size(min = 4, max = 64, message = "O nome deve ter entre 4 e 64 caracteres")
     @Column(nullable = false)
+    @NotBlank(message = "Nome deve ser informado")
+    @NotNull(message = "Nome não pode ser nulo")
     private String nome;
 
+
+    @Email(message = "Deve ser informado um email valido")
     @Column(nullable = false, unique = true)
     private String email;
 
