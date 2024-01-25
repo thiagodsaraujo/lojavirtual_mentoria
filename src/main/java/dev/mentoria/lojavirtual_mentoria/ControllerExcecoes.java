@@ -1,6 +1,8 @@
 package dev.mentoria.lojavirtual_mentoria;
 
 import dev.mentoria.lojavirtual_mentoria.model.dto.ObjetoErroDTO;
+import dev.mentoria.lojavirtual_mentoria.service.ServiceSendEmail;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.hibernate.exception.SQLGrammarException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -23,6 +27,12 @@ import java.util.List;
 @ControllerAdvice
 //Classe pode melhorar a medida que o sistema evolue
 public class ControllerExcecoes extends ResponseEntityExceptionHandler {
+
+    private final ServiceSendEmail serviceSendEmail;
+
+    public ControllerExcecoes(ServiceSendEmail serviceSendEmail) {
+        this.serviceSendEmail = serviceSendEmail;
+    }
 
 
     @ExceptionHandler(ExceptionMentoriaJava.class)
@@ -75,8 +85,17 @@ public class ControllerExcecoes extends ResponseEntityExceptionHandler {
         }
 
         objetoErroDTO.setError(msg);
-
         objetoErroDTO.setCode(status.value() + " ===> " + status.getReasonPhrase());
+        ex.printStackTrace();
+
+//        try {
+////            Mandar e-mail para o responsável caso aconteça erro.
+//            serviceSendEmail.enviarEmailHtmlOutlook("Erro na loja virtual" , ExceptionUtils.getMessage(ex), "responsavelprojeto@gmail.com");
+//        } catch (UnsupportedEncodingException e) {
+//            throw new RuntimeException(e);
+//        } catch (MessagingException e) {
+//            throw new RuntimeException(e);
+//        }
 
 
         return new ResponseEntity<Object>(objetoErroDTO, HttpStatus.INTERNAL_SERVER_ERROR);
