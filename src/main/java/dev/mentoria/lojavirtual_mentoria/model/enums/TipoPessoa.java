@@ -4,7 +4,10 @@ public enum TipoPessoa {
 
     PJ("PJ"),
 
+    FORN("FORNECEDOR"),
+
     PF("PF");
+
 
     private String descricao;
 

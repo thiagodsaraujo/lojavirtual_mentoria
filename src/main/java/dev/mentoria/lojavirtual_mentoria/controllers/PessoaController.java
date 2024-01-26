@@ -5,10 +5,13 @@ import dev.mentoria.lojavirtual_mentoria.model.Endereco;
 import dev.mentoria.lojavirtual_mentoria.model.PessoaFisica;
 import dev.mentoria.lojavirtual_mentoria.model.PessoaJuridica;
 import dev.mentoria.lojavirtual_mentoria.model.dto.CEPDto;
+import dev.mentoria.lojavirtual_mentoria.model.dto.ConsultaCNPJDto;
+import dev.mentoria.lojavirtual_mentoria.model.enums.TipoPessoa;
 import dev.mentoria.lojavirtual_mentoria.repository.EnderecoRepository;
 import dev.mentoria.lojavirtual_mentoria.repository.PessoaFisicaRepository;
 import dev.mentoria.lojavirtual_mentoria.repository.PessoaJuridicaRepository;
 import dev.mentoria.lojavirtual_mentoria.service.PessoaUserService;
+import dev.mentoria.lojavirtual_mentoria.service.ServiceContagemAcessoAPI;
 import dev.mentoria.lojavirtual_mentoria.util.ValidaCNPJ;
 import dev.mentoria.lojavirtual_mentoria.util.ValidaCPF;
 import org.springframework.http.HttpStatus;
@@ -29,14 +32,18 @@ public class PessoaController {
 
     private final PessoaFisicaRepository pessoaFisicaRepository;
 
-
     private final EnderecoRepository enderecoRepository;
 
-    public PessoaController(PessoaJuridicaRepository pessoaRepository, PessoaUserService pessoaUserService, PessoaFisicaRepository pessoaFisicaRepository, EnderecoRepository enderecoRepository) {
+    private final ServiceContagemAcessoAPI serviceContagemAcessoAPI;
+
+
+
+    public PessoaController(PessoaJuridicaRepository pessoaRepository, PessoaUserService pessoaUserService, PessoaFisicaRepository pessoaFisicaRepository, EnderecoRepository enderecoRepository, ServiceContagemAcessoAPI serviceContagemAcessoAPI) {
         this.pessoaRepository = pessoaRepository;
         this.pessoaUserService = pessoaUserService;
         this.pessoaFisicaRepository = pessoaFisicaRepository;
         this.enderecoRepository = enderecoRepository;
+        this.serviceContagemAcessoAPI = serviceContagemAcessoAPI;
     }
 
 
@@ -44,7 +51,10 @@ public class PessoaController {
     @GetMapping(value = "/consultaPfNome/{nome}")
     public ResponseEntity<List<PessoaFisica>> consultaPfPorNome(@PathVariable("nome") String nome){
 
+        serviceContagemAcessoAPI.atualizaAcessoEndPoint("consultanomepf");
+
         var pfByNomeList = pessoaFisicaRepository.findPFByNomeList(nome.trim().toUpperCase());
+
 
         return new ResponseEntity<List<PessoaFisica>>(pfByNomeList, HttpStatus.OK );
 
@@ -55,6 +65,8 @@ public class PessoaController {
     @GetMapping(value = "/consultapfcpf/{cpf}")
     public ResponseEntity<List<PessoaFisica>> consultaPfPorCpf(@PathVariable("cpf") String cpf){
 
+        serviceContagemAcessoAPI.atualizaAcessoEndPoint("consultacpf");
+
         return new ResponseEntity<List<PessoaFisica>>(pessoaFisicaRepository.existeCpfCadastradoList(cpf), HttpStatus.OK);
 
     }
@@ -62,6 +74,8 @@ public class PessoaController {
     @ResponseBody
     @GetMapping(value = "/consultaPjNome/{nome}")
     public ResponseEntity<List<PessoaJuridica>> consultaPjPorNome(@PathVariable("nome") String nome){
+
+        serviceContagemAcessoAPI.atualizaAcessoEndPoint("consultanomepj");
 
         var pjByNomeList = pessoaRepository.findPJByNomeList(nome.trim().toUpperCase());
 
@@ -74,6 +88,8 @@ public class PessoaController {
     @GetMapping(value = "/consultaCnpj/{cnpj}")
     public ResponseEntity<List<PessoaJuridica>> consultaPjPorCnpj(@PathVariable("cnpj") String cnpj){
 
+        serviceContagemAcessoAPI.atualizaAcessoEndPoint("consultacnpj");
+
         return new ResponseEntity<List<PessoaJuridica>>(pessoaRepository.existeCnpjCadastradoList(cnpj), HttpStatus.OK);
 
     }
@@ -83,7 +99,21 @@ public class PessoaController {
     @GetMapping(value = "/consultaCep/{cep}")
     public ResponseEntity<CEPDto> consultaCep(@PathVariable("cep") String cep){
 
+        serviceContagemAcessoAPI.atualizaAcessoEndPoint("consultacep");
+
+
         return new ResponseEntity<CEPDto>(pessoaUserService.consultaCep(cep), HttpStatus.OK);
+
+    }
+
+    @ResponseBody
+    @GetMapping(value = "/consultacnpjReceitaws/{cnpj}")
+    public ResponseEntity<ConsultaCNPJDto> consultaCpnjReceitaWs(@PathVariable("cnpj") String cnpj){
+
+        serviceContagemAcessoAPI.atualizaAcessoEndPoint("consultacep");
+
+
+        return new ResponseEntity<ConsultaCNPJDto>(pessoaUserService.consuconsultaCnpjReceitaWs(cnpj), HttpStatus.OK);
 
     }
 
@@ -94,6 +124,10 @@ public class PessoaController {
 
         if (pessoaJuridica == null){
             throw new ExceptionMentoriaJava("Pessoa Juridica não pode ser nula");
+        }
+
+        if (pessoaJuridica.getTipoPessoa() == null){
+            throw new ExceptionMentoriaJava("Informe o tipo da pessoa: JURIDICA, FISICA, OU FORNECEDOR");
         }
 
         if (pessoaJuridica.getId() == null && pessoaRepository.existeCnpjCadastrado(pessoaJuridica.getCnpj()) != null){ // Pessoa nova
@@ -156,6 +190,10 @@ public class PessoaController {
 
         if (pessoaFisica == null){
             throw new ExceptionMentoriaJava("Pessoa Fisica não pode ser nula");
+        }
+
+        if (pessoaFisica.getTipoPessoa() == null){
+            pessoaFisica.setTipoPessoa(TipoPessoa.PF.name());
         }
 
         if (pessoaFisica.getId() == null && pessoaFisicaRepository.existeCpfCadastrado(pessoaFisica.getCpf()) != null){ // Pessoa nova
