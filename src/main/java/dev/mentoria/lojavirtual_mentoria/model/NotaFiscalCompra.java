@@ -2,7 +2,12 @@ package dev.mentoria.lojavirtual_mentoria.model;
 
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -17,32 +22,39 @@ public class NotaFiscalCompra implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(nullable = false)
+    @NotNull(message = "Número da Nota é obrigatório")
+    @Column(nullable = false, unique = true)
     private String numeroNota;
 
+    @NotNull(message = "Série da Nota é obrigatório")
     @Column(nullable = false)
     private String serieNota;
 
     private String descricaoObs;
 
+    @NotNull(message = "Valor Total da Nota é obrigatório")
     @Column(nullable = false)
     private BigDecimal valorTotal;
 
 
     private BigDecimal valorDesconto;
 
+    @NotNull(message = "Valor do ICMS é obrigatório")
     @Column(nullable = false)
     private BigDecimal valorIcms;
 
+    @NotNull(message = "Data da compra é obrigatória")
     @Temporal(TemporalType.DATE)
+    @JsonFormat(pattern = "dd-MM-yyyy")
     @Column(nullable = false)
     private Date dataCompra;
 
 
+    // validar esses atributos no controller, não fica mto compatível criar validações aqui
     //usamos o targetEntity aqui para ajudar o JPA a saber qual classe de destino pois é uma herança
     @ManyToOne(targetEntity = Pessoa.class)
     @JoinColumn(name = "pessoa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_fk"))
-    private Pessoa pessoa;
+    private PessoaJuridica pessoa;
 
 
     @ManyToOne
@@ -52,14 +64,14 @@ public class NotaFiscalCompra implements Serializable {
 
     @ManyToOne(targetEntity = Pessoa.class)
     @JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
-    private Pessoa empresa;
+    private PessoaJuridica empresa;
 
 
-    public Pessoa getEmpresa() {
+    public PessoaJuridica getEmpresa() {
         return empresa;
     }
 
-    public void setEmpresa(Pessoa empresa) {
+    public void setEmpresa(PessoaJuridica empresa) {
         this.empresa = empresa;
     }
 
@@ -134,7 +146,7 @@ public class NotaFiscalCompra implements Serializable {
         return pessoa;
     }
 
-    public void setPessoa(Pessoa pessoa) {
+    public void setPessoa(PessoaJuridica pessoa) {
         this.pessoa = pessoa;
     }
 
