@@ -85,10 +85,11 @@ public class Produto implements Serializable {
     @JoinColumn(name = "marcaProduto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "marcaProduto_id_fk"))
     private MarcaProduto marcaProduto;
 
-    @NotNull(message = "Nota do produto deve ser informada!")
-    @ManyToOne(targetEntity = NotaItemProduto.class)
-    @JoinColumn(name = "notaItemProduto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "notaItemProduto_id_fk"))
-    private NotaItemProduto notaItemProduto;
+    // Esse relacionamento não existe, iria gerar um erro ao cadastrar um produto
+//    @NotNull(message = "Nota do produto deve ser informada!")
+//    @ManyToOne(targetEntity = NotaItemProduto.class)
+//    @JoinColumn(name = "notaItemProduto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "notaItemProduto_id_fk"))
+//    private NotaItemProduto notaItemProduto;
 
 
     public PessoaJuridica getEmpresa() {
@@ -105,14 +106,6 @@ public class Produto implements Serializable {
 
     public void setMarcaProduto(MarcaProduto marcaProduto) {
         this.marcaProduto = marcaProduto;
-    }
-
-    public NotaItemProduto getNotaItemProduto() {
-        return notaItemProduto;
-    }
-
-    public void setNotaItemProduto(NotaItemProduto notaItemProduto) {
-        this.notaItemProduto = notaItemProduto;
     }
 
     public Integer getQtdeClique() {
