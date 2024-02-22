@@ -7,6 +7,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "produto")
@@ -18,6 +20,7 @@ public class Produto implements Serializable {
     private Long id;
 
     @Column(nullable = false)
+    @NotNull(message = "Tipo de unidade do produto deve ser informado!")
     private String tipoUnidade;
 
     @Size(min = 10, message = "Nome do produto deve ter mais de 10 letras")
@@ -91,6 +94,17 @@ public class Produto implements Serializable {
 //    @JoinColumn(name = "notaItemProduto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "notaItemProduto_id_fk"))
 //    private NotaItemProduto notaItemProduto;
 
+    @OneToMany(mappedBy = "produto", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ImagemProduto> imagens = new ArrayList<ImagemProduto>();
+    // Um produto tem várias imagens e uma imagem pertence a um produto
+
+    public List<ImagemProduto> getImagens() {
+        return imagens;
+    }
+
+    public void setImagens(List<ImagemProduto> imagens) {
+        this.imagens = imagens;
+    }
 
     public PessoaJuridica getEmpresa() {
         return empresa;

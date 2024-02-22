@@ -3,6 +3,7 @@ package dev.mentoria.lojavirtual_mentoria.repository;
 import dev.mentoria.lojavirtual_mentoria.model.NotaFiscalCompra;
 import dev.mentoria.lojavirtual_mentoria.model.NotaItemProduto;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +31,8 @@ public interface NotaItemProdutoRepository extends JpaRepository<NotaItemProduto
     List<NotaFiscalCompra> buscaNotaItemPorEmpresaId(Long idEmpresa);
 
 
-    @Override
-    void deleteById(Long aLong);
+    @Transactional
+    @Modifying
+    @Query(nativeQuery = true, value = "DELETE FROM nota_item_produto WHERE id = ?1")
+    void deleteById(Long id);
 }
