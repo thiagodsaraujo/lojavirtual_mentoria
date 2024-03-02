@@ -3,6 +3,7 @@ package dev.mentoria.lojavirtual_mentoria.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -24,7 +25,8 @@ public class ImagemProduto implements Serializable {
 
 
     @ManyToOne(targetEntity = PessoaJuridica.class)
-    @JsonIgnore // para evitar looping infinito
+//    @JsonIgnore // para evitar looping infinito
+    @JsonIgnoreProperties(allowGetters = true)
     @JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
     private PessoaJuridica empresa;
 
@@ -37,9 +39,6 @@ public class ImagemProduto implements Serializable {
         this.empresa = empresa;
     }
 
-    //
-
-
     public Long getId() {
         return id;
     }
@@ -50,7 +49,8 @@ public class ImagemProduto implements Serializable {
 
     // Muitas imagens para um produto
     @ManyToOne
-    @JsonIgnore
+    @JsonIgnoreProperties(allowGetters = true)
+//    @JsonIgnore
     @JoinColumn(name = "produto_id", nullable = false,
             foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "produto_fk"))
     private Produto produto;
