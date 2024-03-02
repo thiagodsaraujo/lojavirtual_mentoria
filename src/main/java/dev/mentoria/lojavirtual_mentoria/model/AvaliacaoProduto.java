@@ -3,6 +3,10 @@ package dev.mentoria.lojavirtual_mentoria.model;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Entity
@@ -17,15 +21,19 @@ public class AvaliacaoProduto implements Serializable {
 
 
     @Column(columnDefinition = "text", nullable = false)
+    @NotEmpty(message = "Informe uma descricao para o produto!")
     private String descricao;
 
 
     @Column(nullable = false)
+//    @Min(value = 1, message = "A nota deve ser entre 1 e 5!")
+//    @Max(value = 5, message = "A nota deve ser entre 1 e 5!")
+//    @NotEmpty(message = "Informe uma nota para o produto!")
     private Integer nota;
 
-    @ManyToOne(targetEntity = Pessoa.class)
+    @ManyToOne(targetEntity = PessoaFisica.class)
     @JoinColumn(name = "pessoa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_fk"))
-    private Pessoa pessoa;
+    private PessoaFisica pessoa;
     // muitas avaliações para uma pessoa
 
     @ManyToOne(targetEntity = Produto.class)
@@ -33,9 +41,9 @@ public class AvaliacaoProduto implements Serializable {
     private Produto produto;
     // muitas avaliações para um produto
 
-    @ManyToOne(targetEntity = Pessoa.class)
+    @ManyToOne(targetEntity = PessoaJuridica.class)
     @JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
-    private Pessoa empresa;
+    private PessoaJuridica empresa;
 
 
     public Long getId() {
@@ -62,11 +70,11 @@ public class AvaliacaoProduto implements Serializable {
         this.nota = nota;
     }
 
-    public Pessoa getPessoa() {
+    public PessoaFisica getPessoa() {
         return pessoa;
     }
 
-    public void setPessoa(Pessoa pessoa) {
+    public void setPessoa(PessoaFisica pessoa) {
         this.pessoa = pessoa;
     }
 
@@ -79,11 +87,11 @@ public class AvaliacaoProduto implements Serializable {
     }
 
 
-    public Pessoa getEmpresa() {
+    public PessoaJuridica getEmpresa() {
         return empresa;
     }
 
-    public void setEmpresa(Pessoa empresa) {
+    public void setEmpresa(PessoaJuridica empresa) {
         this.empresa = empresa;
     }
 

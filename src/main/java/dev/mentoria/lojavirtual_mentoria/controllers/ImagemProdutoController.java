@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -55,12 +56,25 @@ public class ImagemProdutoController {
 
     @ResponseBody
     @GetMapping(value = "/obterImagem/{idProduto}")
-    public ResponseEntity<List<ImagemProduto>> obterImagemPorProduto(@PathVariable("idProduto") Long idProduto) {
+    public ResponseEntity<List<ImagemProdutoDTO>> obterImagemPorProduto(@PathVariable("idProduto") Long idProduto) {
 
+        List<ImagemProdutoDTO> dtos = new ArrayList<ImagemProdutoDTO>();
 
         List<ImagemProduto> imagens = imagemProdutoRepository.buscarImagemProduto(idProduto);
 
-        return new ResponseEntity<List<ImagemProduto>>(imagens, HttpStatus.OK);
+        for (ImagemProduto img : imagens) {
+
+            ImagemProdutoDTO dto = new ImagemProdutoDTO();
+
+            dto.setId(img.getId());
+            dto.setImagemOriginal(img.getImagemOriginal());
+            dto.setImageMiniatura(img.getImageMiniatura());
+            dto.setProdutoId(img.getProduto().getId());
+            dto.setEmpresaId(img.getEmpresa().getId());
+            dtos.add(dto);
+        }
+
+        return new ResponseEntity<List<ImagemProdutoDTO>>(dtos, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/deletarImagemObj")
