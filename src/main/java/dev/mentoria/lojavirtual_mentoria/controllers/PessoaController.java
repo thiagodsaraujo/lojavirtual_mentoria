@@ -197,7 +197,7 @@ public class PessoaController {
         }
 
         if (pessoaFisica.getId() == null && pessoaFisicaRepository.existeCpfCadastrado(pessoaFisica.getCpf()) != null){ // Pessoa nova
-            throw new ExceptionMentoriaJava("Já existe CNPJ cadastrado com o número: " + pessoaFisica.getCpf());
+            throw new ExceptionMentoriaJava("Já existe CPF cadastrado com o número: " + pessoaFisica.getCpf());
         }
 
         if (!ValidaCPF.isCPF(pessoaFisica.getCpf())){

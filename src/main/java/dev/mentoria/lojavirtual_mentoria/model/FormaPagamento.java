@@ -2,6 +2,7 @@ package dev.mentoria.lojavirtual_mentoria.model;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Entity
@@ -15,19 +16,21 @@ public class FormaPagamento implements Serializable {
     private Long id;
 
     @Column(nullable = false)
+    @NotNull(message = "A descrição da forma de pagamento não pode ser nula")
     private String descricao;
 
 
-    @ManyToOne(targetEntity = Pessoa.class)
+    @ManyToOne(targetEntity = PessoaJuridica.class)
+    @NotNull(message = "A empresa não pode ser nula")
     @JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
-    private Pessoa empresa;
+    private PessoaJuridica empresa;
 
 
-    public Pessoa getEmpresa() {
+    public PessoaJuridica getEmpresa() {
         return empresa;
     }
 
-    public void setEmpresa(Pessoa empresa) {
+    public void setEmpresa(PessoaJuridica empresa) {
         this.empresa = empresa;
     }
 

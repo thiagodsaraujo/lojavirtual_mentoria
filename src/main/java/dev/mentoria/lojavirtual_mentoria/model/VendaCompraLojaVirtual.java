@@ -2,6 +2,9 @@ package dev.mentoria.lojavirtual_mentoria.model;
 
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
@@ -50,8 +53,9 @@ public class VendaCompraLojaVirtual implements Serializable {
 
     // uma nota fiscal é associada a só uma venda da loja virtual
     @OneToOne(targetEntity = NotaFiscalVenda.class, cascade = CascadeType.ALL)
+    @JsonIgnoreProperties(allowGetters = true) // tenta converter para json e dá erro, então ignoramos a conversão vai entrar em loop
     @NotNull(message = "A nota fiscal não pode ser nula")
-    @JoinColumn(name = "nota_fiscal_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "nota_fiscal_fk"))
+    @JoinColumn(name = "nota_fiscal_id", nullable = true, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "nota_fiscal_fk"))
     private NotaFiscalVenda notaFiscalVenda;
 
 
@@ -80,17 +84,17 @@ public class VendaCompraLojaVirtual implements Serializable {
     private Date dataVenda;
 
 
-    @ManyToOne(targetEntity = Pessoa.class)
+    @ManyToOne(targetEntity = PessoaJuridica.class)
     @NotNull(message = "A empresa não pode ser nula")
     @JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
-    private Pessoa empresa;
+    private PessoaJuridica empresa;
 
 
-    public Pessoa getEmpresa() {
+    public PessoaJuridica getEmpresa() {
         return empresa;
     }
 
-    public void setEmpresa(Pessoa empresa) {
+    public void setEmpresa(PessoaJuridica empresa) {
         this.empresa = empresa;
     }
 
