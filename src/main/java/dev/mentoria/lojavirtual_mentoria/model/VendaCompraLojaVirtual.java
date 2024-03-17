@@ -3,6 +3,9 @@ package dev.mentoria.lojavirtual_mentoria.model;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -18,30 +21,36 @@ public class VendaCompraLojaVirtual implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @ManyToOne(targetEntity = Pessoa.class)
+    @ManyToOne(targetEntity = PessoaFisica.class, cascade = CascadeType.ALL)
+    @NotNull(message = "A pessoa que realizou a compra não pode ser nula")
     @JoinColumn(name = "pessoa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_fk"))
-    private Pessoa pessoa;
+    private PessoaFisica pessoa;
 
-    @ManyToOne(targetEntity = Endereco.class)
+    @ManyToOne(targetEntity = Endereco.class, cascade = CascadeType.ALL)
+    @NotNull(message = "O endereço de entrega não pode ser nulo")
     @JoinColumn(name = "endereco_entrega_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "endereco_entrega_fk"))
     private Endereco enderecoEntrega;
 
-    @ManyToOne(targetEntity = Endereco.class)
+    @ManyToOne(targetEntity = Endereco.class, cascade = CascadeType.ALL)
+    @NotNull(message = "O endereço de cobrança não pode ser nulo")
     @JoinColumn(name = "endereco_cobranca_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "endereco_cobranca_fk"))
     private Endereco enderecoCobranca;
 
     @Column(nullable = false)
+    @Min(value = 0, message = "O valor total da venda não pode ser negativo")
     private BigDecimal valorTotal;
 
     private BigDecimal valorDesconto;
 
     @ManyToOne(targetEntity = FormaPagamento.class)
+    @NotNull(message = "A forma de pagamento não pode ser nula")
     @JoinColumn(name = "forma_pgto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "forma_pgto_fk"))
     private FormaPagamento formaPagamento;
 
 
     // uma nota fiscal é associada a só uma venda da loja virtual
-    @OneToOne
+    @OneToOne(targetEntity = NotaFiscalVenda.class, cascade = CascadeType.ALL)
+    @NotNull(message = "A nota fiscal não pode ser nula")
     @JoinColumn(name = "nota_fiscal_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "nota_fiscal_fk"))
     private NotaFiscalVenda notaFiscalVenda;
 
@@ -52,21 +61,27 @@ public class VendaCompraLojaVirtual implements Serializable {
     private CupomDesconto cupomDesconto;
 
     @Column(nullable = false)
+    @Min(value = 0, message = "O valor do frete não pode ser negativo")
+    @NotNull(message = "O valor do frete não pode ser nulo")
     private BigDecimal valorFrete;
 
     @Column(nullable = false)
+    @Min(value = 1, message = "O prazo de entrega não pode ser menor que 1")
     private Integer diasEntrega;
 
     @Temporal(TemporalType.DATE)
     @Column(nullable = false)
+    @NotNull(message = "A data de entrega não pode ser nula")
     private Date dataEntrega;
 
     @Temporal(TemporalType.DATE)
+    @NotNull(message = "A data da venda não pode ser nula")
     @Column(nullable = false)
     private Date dataVenda;
 
 
     @ManyToOne(targetEntity = Pessoa.class)
+    @NotNull(message = "A empresa não pode ser nula")
     @JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
     private Pessoa empresa;
 
@@ -81,11 +96,11 @@ public class VendaCompraLojaVirtual implements Serializable {
 
     //
 
-    public Pessoa getPessoa() {
+    public PessoaFisica getPessoa() {
         return pessoa;
     }
 
-    public void setPessoa(Pessoa pessoa) {
+    public void setPessoa(PessoaFisica pessoa) {
         this.pessoa = pessoa;
     }
 
