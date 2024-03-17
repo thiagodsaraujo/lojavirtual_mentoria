@@ -50,7 +50,7 @@ public class ImagemProduto implements Serializable {
     // Muitas imagens para um produto
     @ManyToOne
     @JsonIgnoreProperties(allowGetters = true)
-//    @JsonIgnore
+    @JsonIgnore
     @JoinColumn(name = "produto_id", nullable = false,
             foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "produto_fk"))
     private Produto produto;

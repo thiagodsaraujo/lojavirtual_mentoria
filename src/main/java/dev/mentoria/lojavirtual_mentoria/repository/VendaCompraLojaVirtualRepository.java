@@ -16,4 +16,6 @@ public interface VendaCompraLojaVirtualRepository extends JpaRepository<VendaCom
     VendaCompraLojaVirtual findByPessoaId(Long idPessoa);
 
 
+
+
 }

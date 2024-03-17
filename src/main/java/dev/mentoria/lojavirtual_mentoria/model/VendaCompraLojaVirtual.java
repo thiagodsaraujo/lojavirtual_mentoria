@@ -2,16 +2,17 @@ package dev.mentoria.lojavirtual_mentoria.model;
 
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import dev.mentoria.lojavirtual_mentoria.model.dto.ItemVendaDTO;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "vd_cp_loja_virt")
@@ -53,7 +54,8 @@ public class VendaCompraLojaVirtual implements Serializable {
 
     // uma nota fiscal é associada a só uma venda da loja virtual
     @OneToOne(targetEntity = NotaFiscalVenda.class, cascade = CascadeType.ALL)
-    @JsonIgnoreProperties(allowGetters = true) // tenta converter para json e dá erro, então ignoramos a conversão vai entrar em loop
+    @JsonIgnoreProperties(allowGetters = true)
+    // tenta converter para json e dá erro, então ignoramos a conversão vai entrar em loop
     @NotNull(message = "A nota fiscal não pode ser nula")
     @JoinColumn(name = "nota_fiscal_id", nullable = true, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "nota_fiscal_fk"))
     private NotaFiscalVenda notaFiscalVenda;
@@ -89,6 +91,18 @@ public class VendaCompraLojaVirtual implements Serializable {
     @JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
     private PessoaJuridica empresa;
 
+
+    @OneToMany(mappedBy = "vendaCompraLojaVirtual", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, targetEntity = ItemVendaLoja.class)
+    private List<ItemVendaLoja> itemVendaLojas = new ArrayList<ItemVendaLoja>();
+
+
+    public void setItemVendaLojas(List<ItemVendaLoja> itemVendaLojas) {
+        this.itemVendaLojas = itemVendaLojas;
+    }
+
+    public List<ItemVendaLoja> getItemVendaLojas() {
+        return itemVendaLojas;
+    }
 
     public PessoaJuridica getEmpresa() {
         return empresa;
@@ -217,4 +231,7 @@ public class VendaCompraLojaVirtual implements Serializable {
     public int hashCode() {
         return getId().hashCode();
     }
+
+
+
 }
