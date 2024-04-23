@@ -85,6 +85,8 @@ public class AvaliacaoProdController {
         return ResponseEntity.ok(avaliacaoProdutoRepository.avaliacaoProdutoPessoa(pessoaId, produtoId));
     }
 
+    @PostMapping("/atualizarAvaliacao")
+
 
     @ResponseBody
     @DeleteMapping("/deletarAvaliacao/{id}")

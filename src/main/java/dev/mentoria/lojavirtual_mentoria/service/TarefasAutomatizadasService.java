@@ -35,7 +35,7 @@ public class TarefasAutomatizadasService {
             msg.append("Troque sua senha na loja virtual - JDEV");
 
 
-            serviceSendEmail.enviarEmailHtmlOutlook("Troca de Senha - Loja Virtual", msg.toString(), usuario.getLogin());
+//            serviceSendEmail.enviarEmailHtmlOutlook("Troca de Senha - Loja Virtual", msg.toString(), usuario.getLogin());
 
             // Esperar 3s para liberar recurso da máquina
             Thread.sleep(3000);

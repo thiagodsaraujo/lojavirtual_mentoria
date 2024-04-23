@@ -199,7 +199,7 @@ public class PessoaUserService {
                     "</html>\n"));
 
             try {
-                serviceSendEmail.enviarEmailHtmlOutlook("Acesso Gerado para Loja Virtual", String.valueOf(mensagemHtml), fisica.getEmail());
+//                serviceSendEmail.enviarEmailHtmlOutlook("Acesso Gerado para Loja Virtual", String.valueOf(mensagemHtml), fisica.getEmail());
 //                serviceSendEmail.sendEmail(juridica.getEmail(), "Acesso Gerado para Loja Virtual", mensagemHtml.toString());
 
             } catch (Exception e){

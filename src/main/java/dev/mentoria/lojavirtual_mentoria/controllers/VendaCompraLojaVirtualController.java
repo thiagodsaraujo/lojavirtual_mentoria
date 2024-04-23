@@ -1,22 +1,18 @@
 package dev.mentoria.lojavirtual_mentoria.controllers;
 
 import dev.mentoria.lojavirtual_mentoria.ExceptionMentoriaJava;
-import dev.mentoria.lojavirtual_mentoria.model.Endereco;
-import dev.mentoria.lojavirtual_mentoria.model.ItemVendaLoja;
-import dev.mentoria.lojavirtual_mentoria.model.PessoaFisica;
-import dev.mentoria.lojavirtual_mentoria.model.VendaCompraLojaVirtual;
+import dev.mentoria.lojavirtual_mentoria.model.*;
 import dev.mentoria.lojavirtual_mentoria.model.dto.ItemVendaDTO;
 import dev.mentoria.lojavirtual_mentoria.model.dto.VendaCompraLojaVirtualDTO;
-import dev.mentoria.lojavirtual_mentoria.repository.EnderecoRepository;
-import dev.mentoria.lojavirtual_mentoria.repository.NotaFiscalVendaRepository;
-import dev.mentoria.lojavirtual_mentoria.repository.PessoaFisicaRepository;
-import dev.mentoria.lojavirtual_mentoria.repository.VendaCompraLojaVirtualRepository;
+import dev.mentoria.lojavirtual_mentoria.repository.*;
+import dev.mentoria.lojavirtual_mentoria.service.VendaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 
 @RestController
@@ -38,6 +34,16 @@ public class VendaCompraLojaVirtualController {
     @Autowired
     private NotaFiscalVendaRepository notaFiscalVendaRepository;
 
+    @Autowired
+    private StatusRastreioRepository statusRastreioRepository;
+
+    @Autowired
+    private VendaService vendaService;
+
+    @GetMapping("/listarVendas")
+    public ResponseEntity<List<VendaCompraLojaVirtual>> listarVendas() {
+        return ResponseEntity.ok(vendaCompraRepository.findAll());
+    }
 
     @PostMapping("/SalvarVenda")
     public ResponseEntity<VendaCompraLojaVirtualDTO> salvarVendaLoja(@RequestBody @Valid VendaCompraLojaVirtual vendaCompraLojaVirtual) throws ExceptionMentoriaJava {
@@ -75,6 +81,17 @@ public class VendaCompraLojaVirtualController {
 
         //Salva primeiro a venda e todos os dados
         vendaCompraLojaVirtual = vendaCompraRepository.saveAndFlush(vendaCompraLojaVirtual);
+
+        StatusRastreio statusRastreio = new StatusRastreio();
+
+        statusRastreio.setCentroDistribuicao("Loja Local");
+        statusRastreio.setCidade("Local");
+        statusRastreio.setEmpresa(vendaCompraLojaVirtual.getEmpresa());
+        statusRastreio.setEstado("Local");
+        statusRastreio.setStatus("Inicio Compra");
+        statusRastreio.setVendaCompraLojaVirtual(vendaCompraLojaVirtual);
+
+        statusRastreioRepository.save(statusRastreio);
 
         // associar a venda gravada no banco com a nota fiscal
 
@@ -124,6 +141,15 @@ public class VendaCompraLojaVirtualController {
         }
 
         return new ResponseEntity<VendaCompraLojaVirtualDTO>(vendaCompraLojaVirtualDTO, HttpStatus.OK);
+    }
+
+    @ResponseBody
+    @DeleteMapping("/exclusaoTotalBanco/{idVenda}")
+    public ResponseEntity<String> exclusaoTotalBanco(@PathVariable(value = "idVenda") Long idVenda) {
+
+        vendaService.exclusaoTotalVendaBanco(idVenda);
+
+        return new ResponseEntity<>("Venda excluída com sucesso", HttpStatus.OK);
     }
 
 
