@@ -29,6 +29,10 @@ public class VendaCompraLojaVirtualDTO {
 
     private BigDecimal valorFrete;
 
+    private Boolean excluido;
+
+
+
     private List<ItemVendaDTO> itemVendaLoja = new ArrayList<ItemVendaDTO>();
 
     public void setItemVendaLoja(List<ItemVendaDTO> itemVendaLoja) {
@@ -93,5 +97,13 @@ public class VendaCompraLojaVirtualDTO {
 
     public BigDecimal getValorTotal() {
         return valorTotal;
+    }
+
+    public Boolean getExcluido() {
+        return excluido;
+    }
+
+    public void setExcluido(Boolean excluido) {
+        this.excluido = excluido;
     }
 }

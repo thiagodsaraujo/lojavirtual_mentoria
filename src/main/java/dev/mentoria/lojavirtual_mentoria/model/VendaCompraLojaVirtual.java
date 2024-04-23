@@ -95,6 +95,7 @@ public class VendaCompraLojaVirtual implements Serializable {
     @OneToMany(mappedBy = "vendaCompraLojaVirtual", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, targetEntity = ItemVendaLoja.class)
     private List<ItemVendaLoja> itemVendaLojas = new ArrayList<ItemVendaLoja>();
 
+    private Boolean excluido = Boolean.FALSE; // sempre que salvar um novo registro ele não é excluido, é válido no bd
 
     public void setItemVendaLojas(List<ItemVendaLoja> itemVendaLojas) {
         this.itemVendaLojas = itemVendaLojas;
@@ -102,6 +103,15 @@ public class VendaCompraLojaVirtual implements Serializable {
 
     public List<ItemVendaLoja> getItemVendaLojas() {
         return itemVendaLojas;
+    }
+
+
+    public Boolean getExcluido() {
+        return excluido;
+    }
+
+    public void setExcluido(Boolean excluido) {
+        this.excluido = excluido;
     }
 
     public PessoaJuridica getEmpresa() {

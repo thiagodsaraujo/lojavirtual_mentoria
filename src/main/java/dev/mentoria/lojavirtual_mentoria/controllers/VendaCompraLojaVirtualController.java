@@ -111,7 +111,11 @@ public class VendaCompraLojaVirtualController {
     @GetMapping("/buscarVenda/{id}")
     public ResponseEntity<VendaCompraLojaVirtualDTO> consultarVendaID(@PathVariable("id") Long id) throws ExceptionMentoriaJava {
 
-        VendaCompraLojaVirtual vendaCompraLojaVirtual = vendaCompraRepository.findById(id).orElseThrow(() -> new ExceptionMentoriaJava("Venda não encontrada"));
+        VendaCompraLojaVirtual vendaCompraLojaVirtual = vendaCompraRepository.findByIdExclusao(id);
+
+        if(vendaCompraLojaVirtual == null){ // Talvez dê um bug aqui pois código diferente do professor.
+            vendaCompraLojaVirtual = new VendaCompraLojaVirtual();
+        }
 
         return retornoVendaPDto(vendaCompraLojaVirtual);
     }
@@ -127,6 +131,9 @@ public class VendaCompraLojaVirtualController {
 
         vendaCompraLojaVirtualDTO.setValorDesc(vendaCompraLojaVirtual.getValorDesconto());
         vendaCompraLojaVirtualDTO.setValorFrete(vendaCompraLojaVirtual.getValorFrete());
+
+        vendaCompraLojaVirtualDTO.setExcluido(vendaCompraLojaVirtual.getExcluido());
+
 
         vendaCompraLojaVirtualDTO.setValorTotal(vendaCompraLojaVirtual.getValorTotal());
 
@@ -151,6 +158,27 @@ public class VendaCompraLojaVirtualController {
 
         return new ResponseEntity<>("Venda excluída com sucesso", HttpStatus.OK);
     }
+
+
+    @ResponseBody
+    @DeleteMapping("/exclusaoTotalBanco/v2/{idVenda}")
+    public ResponseEntity<String> exclusaoSoftTotalBanco(@PathVariable(value = "idVenda") Long idVenda) {
+
+        vendaService.softExclusaoVenda(idVenda);
+
+        return new ResponseEntity<>("Foi realizada uma exclusão soft da venda com sucesso", HttpStatus.OK);
+    }
+
+    @ResponseBody
+    @PutMapping("/ativaRegistro/{idVenda}")
+    public ResponseEntity<String> ativaRegistroVendaBanco(@PathVariable(value = "idVenda") Long idVenda) {
+
+        vendaService.ativaRegistroVendaBanco(idVenda);
+
+        return new ResponseEntity<>("Foi retornada uma venda do BD com sucesso", HttpStatus.OK);
+    }
+
+
 
 
 }
