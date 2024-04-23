@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -33,4 +34,10 @@ public interface VendaCompraLojaVirtualRepository extends JpaRepository<VendaCom
     @Query(value = "SELECT vd FROM VendaCompraLojaVirtual vd WHERE vd.id = ?1 and vd.excluido = false")
     VendaCompraLojaVirtual findByIdExclusao(Long id);
     // se o campo excluido for true, ele não vai retornar o registro, retornando os campos todos null
+
+    @Query(value = "SELECT itemVdLoja.vendaCompraLojaVirtual " +
+            "FROM ItemVendaLoja itemVdLoja " +
+            "WHERE itemVdLoja.vendaCompraLojaVirtual.excluido = false " +
+            "and itemVdLoja.produto.id = ?1")
+    List<VendaCompraLojaVirtual> vendaPorProduto(Long idProduto);
 }
