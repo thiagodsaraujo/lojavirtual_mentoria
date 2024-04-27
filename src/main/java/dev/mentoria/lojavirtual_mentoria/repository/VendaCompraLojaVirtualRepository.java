@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -80,4 +81,11 @@ public interface VendaCompraLojaVirtualRepository extends JpaRepository<VendaCom
             "and venda.vendaCompraLojaVirtual.enderecoEntrega.cep =:cep" +
             " or venda.vendaCompraLojaVirtual.enderecoCobranca.cep= :cep")
     List<VendaCompraLojaVirtual> vendaPorCep(String cep);
+
+    @Query(value = "SELECT DISTINCT venda.vendaCompraLojaVirtual " +
+            "FROM ItemVendaLoja venda " +
+            "WHERE venda.vendaCompraLojaVirtual.excluido = false " +
+            "AND venda.vendaCompraLojaVirtual.dataVenda " +
+            "BETWEEN :dataInicio AND :dataFim")
+    List<VendaCompraLojaVirtual> vendaPorData(Date dataInicio, Date dataFim);
 }

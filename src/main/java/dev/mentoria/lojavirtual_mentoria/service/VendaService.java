@@ -1,11 +1,21 @@
 package dev.mentoria.lojavirtual_mentoria.service;
 
+import dev.mentoria.lojavirtual_mentoria.model.VendaCompraLojaVirtual;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.Date;
+import java.util.List;
+
 @Service
 public class VendaService {
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -43,4 +53,25 @@ public class VendaService {
 
         jdbcTemplate.execute(value);
     }
+
+
+//    @Query(value = "SELECT DISTINCT venda.vendaCompraLojaVirtual " +
+//            "FROM ItemVendaLoja venda " +
+//            "WHERE venda.vendaCompraLojaVirtual.excluido = false " +
+//            "AND venda.vendaCompraLojaVirtual.dataVenda " +
+//            "BETWEEN :dataInicio AND :dataFim")
+
+    /*HQL (Hibernate) ou JPQL (JPA ou Spring Data)*/
+    @SuppressWarnings("unchecked")
+    public List<VendaCompraLojaVirtual> consultaVendaFaixaData(String data1, String data2){
+
+        String sql = "select distinct(i.vendaCompraLojaVirtual) from ItemVendaLoja i "
+                + " where i.vendaCompraLojaVirtual.excluido = false "
+                + " and i.vendaCompraLojaVirtual.dataVenda >= '" + data1 + "'"
+                + " and i.vendaCompraLojaVirtual.dataVenda <= '" + data2 + "'";
+
+        return entityManager.createQuery(sql).getResultList();
+
+    }
+
 }
