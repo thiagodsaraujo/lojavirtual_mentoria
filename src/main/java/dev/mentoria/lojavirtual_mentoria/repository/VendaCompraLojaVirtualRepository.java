@@ -40,4 +40,44 @@ public interface VendaCompraLojaVirtualRepository extends JpaRepository<VendaCom
             "WHERE itemVdLoja.vendaCompraLojaVirtual.excluido = false " +
             "and itemVdLoja.produto.id = ?1")
     List<VendaCompraLojaVirtual> vendaPorProduto(Long idProduto);
+
+
+    @Query(value = "SELECT distinct vd.vendaCompraLojaVirtual " +
+            "FROM ItemVendaLoja vd " +
+            "WHERE vd.vendaCompraLojaVirtual.excluido = false " +
+            "and upper(trim(vd.produto.nome)) like %:valor%")
+    List<VendaCompraLojaVirtual> vendaPorNomeProduto(String valor);
+
+
+    @Query(value = "SELECT distinct vd.vendaCompraLojaVirtual " +
+            "FROM ItemVendaLoja vd " +
+            "WHERE vd.vendaCompraLojaVirtual.excluido = false " +
+            "and upper(trim(vd.vendaCompraLojaVirtual.pessoa.nome)) like %:valor%")
+    List<VendaCompraLojaVirtual> vendaPorNomeCliente(String valor);
+
+    @Query(value = "SELECT distinct vd.vendaCompraLojaVirtual " +
+            "FROM ItemVendaLoja vd " +
+            "WHERE vd.vendaCompraLojaVirtual.excluido = false " +
+            "and vd.vendaCompraLojaVirtual.pessoa.id = :id")
+    List<VendaCompraLojaVirtual> vendaPorIdCliente(Long id);
+
+
+    @Query(value = "SELECT distinct vd.vendaCompraLojaVirtual " +
+            "FROM ItemVendaLoja vd " +
+            "WHERE vd.vendaCompraLojaVirtual.excluido = false " +
+            "and upper(trim(vd.vendaCompraLojaVirtual.enderecoCobranca.ruaLogradouro)) like %:valor%")
+    List<VendaCompraLojaVirtual> vendaPorEndCobranca(String valor);
+
+    @Query(value = "SELECT distinct vd.vendaCompraLojaVirtual " +
+            "FROM ItemVendaLoja vd " +
+            "WHERE vd.vendaCompraLojaVirtual.excluido = false " +
+            "and upper(trim(vd.vendaCompraLojaVirtual.enderecoEntrega.ruaLogradouro)) like %:valor%")
+    List<VendaCompraLojaVirtual> vendaPorEndEntrega(String valor);
+
+    @Query(value = "SELECT DISTINCT venda.vendaCompraLojaVirtual " +
+            "FROM ItemVendaLoja venda " +
+            "WHERE venda.vendaCompraLojaVirtual.excluido = false " +
+            "and venda.vendaCompraLojaVirtual.enderecoEntrega.cep =:cep" +
+            " or venda.vendaCompraLojaVirtual.enderecoCobranca.cep= :cep")
+    List<VendaCompraLojaVirtual> vendaPorCep(String cep);
 }

@@ -179,13 +179,32 @@ public class VendaCompraLojaVirtualController {
         return new ResponseEntity<>("Foi retornada uma venda do BD com sucesso", HttpStatus.OK);
     }
 
-    @ResponseBody
-    @GetMapping(value = "/buscarVendaPorProdutoId/{id}")
-    public ResponseEntity<List<VendaCompraLojaVirtualDTO>> consultaVendaPorProduto(@PathVariable("id") Long idProd) {
 
-        // agora processa várias vendas para um produto, não só uma, teve que modificar o retorno para uma lista de vendas
-        // além disso, a lógica mudou do método de retorno só para um objeto. Agora tem que retornar uma lista de objetos
-        List<VendaCompraLojaVirtual> compraLojaVirtual = vendaCompraRepository.vendaPorProduto(idProd);
+
+    @ResponseBody
+    @GetMapping(value = "/consultaVendaDinamica/{valor}/{tipoConsulta}")
+    public ResponseEntity<List<VendaCompraLojaVirtualDTO>>
+    consultaVendaPorProduto(@PathVariable("valor") String valor,
+                            @PathVariable("tipoConsulta") String tipoConsulta) {
+
+        List<VendaCompraLojaVirtual> compraLojaVirtual = null;
+
+        if (tipoConsulta.equalsIgnoreCase("POR_ID_PROD")) {
+            compraLojaVirtual = vendaCompraRepository.vendaPorProduto(Long.parseLong(valor));
+        } else if(tipoConsulta.equalsIgnoreCase("POR_NOME_PROD")){
+            compraLojaVirtual = vendaCompraRepository.vendaPorNomeProduto(valor.toUpperCase().trim());
+        } else if(tipoConsulta.equalsIgnoreCase("POR_NOME_CLIENTE")){
+            compraLojaVirtual = vendaCompraRepository.vendaPorNomeCliente(valor.toUpperCase().trim());
+        } else if(tipoConsulta.equalsIgnoreCase("POR_ID_CLIENTE")){
+            compraLojaVirtual = vendaCompraRepository.vendaPorIdCliente(Long.parseLong(valor));
+        } else if (tipoConsulta.equalsIgnoreCase("POR_END_COBRANCA")) {
+            compraLojaVirtual = vendaCompraRepository.vendaPorEndCobranca(valor.toUpperCase().trim());
+        } else if (tipoConsulta.equalsIgnoreCase("POR_END_ENTREGA")) {
+            compraLojaVirtual = vendaCompraRepository.vendaPorEndEntrega(valor.toUpperCase().trim());
+        }else if (tipoConsulta.equalsIgnoreCase("POR_CEP")) {
+            compraLojaVirtual = vendaCompraRepository.vendaPorCep(valor.toUpperCase().trim());
+        }
+
 
         if (compraLojaVirtual == null) {
             compraLojaVirtual = new ArrayList<VendaCompraLojaVirtual>();
@@ -226,4 +245,5 @@ public class VendaCompraLojaVirtualController {
 
 
 
-}
+
+    }
