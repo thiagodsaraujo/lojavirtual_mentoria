@@ -1,6 +1,7 @@
 package dev.mentoria.lojavirtual_mentoria.service;
 
 import dev.mentoria.lojavirtual_mentoria.model.VendaCompraLojaVirtual;
+import dev.mentoria.lojavirtual_mentoria.repository.VendaCompraLojaVirtualRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -8,17 +9,22 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 @Service
 public class VendaService {
 
-    @PersistenceContext
+    @PersistenceContext // TRABALHAR DIRETO COM JPA
     private EntityManager entityManager;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private VendaCompraLojaVirtualRepository vendaCompraLojaVirtualRepository;
 
 
     public void softExclusaoVenda(Long idVenda) {
@@ -63,7 +69,16 @@ public class VendaService {
 
     /*HQL (Hibernate) ou JPQL (JPA ou Spring Data)*/
     @SuppressWarnings("unchecked")
-    public List<VendaCompraLojaVirtual> consultaVendaFaixaData(String data1, String data2){
+    public List<VendaCompraLojaVirtual> consultaVendaFaixaData(String data1, String data2) throws ParseException {
+
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//
+//        Date date1 = dateFormat.parse(data1);
+//        Date date2 = dateFormat.parse(data2);
+//
+//        return vendaCompraLojaVirtualRepository.vendaPorData(data1, data2);
+        // se quiser que todas as referencias para a chamada do repository sejam feitas por aqui, pode-se fazer assim ao
+        // inves de chamar o método abaixo do sql direto
 
         String sql = "select distinct(i.vendaCompraLojaVirtual) from ItemVendaLoja i "
                 + " where i.vendaCompraLojaVirtual.excluido = false "

@@ -31,6 +31,12 @@ public interface VendaCompraLojaVirtualRepository extends JpaRepository<VendaCom
     VendaCompraLojaVirtual findByPessoaId(Long idPessoa);
 
 
+    @Query(value = "SELECT distinct (i.vendaCompraLojaVirtual) from ItemVendaLoja i" +
+            " where i.vendaCompraLojaVirtual.excluido = false " +
+            "and i.vendaCompraLojaVirtual.pessoa.id = ?1")
+    List<VendaCompraLojaVirtual> vendaPorCliente(Long id);
+
+
 
     @Query(value = "SELECT vd FROM VendaCompraLojaVirtual vd WHERE vd.id = ?1 and vd.excluido = false")
     VendaCompraLojaVirtual findByIdExclusao(Long id);
@@ -50,11 +56,20 @@ public interface VendaCompraLojaVirtualRepository extends JpaRepository<VendaCom
     List<VendaCompraLojaVirtual> vendaPorNomeProduto(String valor);
 
 
+
+
     @Query(value = "SELECT distinct vd.vendaCompraLojaVirtual " +
             "FROM ItemVendaLoja vd " +
             "WHERE vd.vendaCompraLojaVirtual.excluido = false " +
             "and upper(trim(vd.vendaCompraLojaVirtual.pessoa.nome)) like %:valor%")
     List<VendaCompraLojaVirtual> vendaPorNomeCliente(String valor);
+
+
+    @Query(value="select distinct(i.vendaCompraLojaVirtual) from ItemVendaLoja i "
+            + " where i.vendaCompraLojaVirtual.excluido = false "
+            + " and upper(trim(i.vendaCompraLojaVirtual.pessoa.nome)) like %?1% "
+            + " and i.vendaCompraLojaVirtual.pessoa.cpf = ?2")
+    List<VendaCompraLojaVirtual> vendaPorNomeCliente(String nomepessoa, String cpf);
 
     @Query(value = "SELECT distinct vd.vendaCompraLojaVirtual " +
             "FROM ItemVendaLoja vd " +
@@ -88,4 +103,48 @@ public interface VendaCompraLojaVirtualRepository extends JpaRepository<VendaCom
             "AND venda.vendaCompraLojaVirtual.dataVenda " +
             "BETWEEN :dataInicio AND :dataFim")
     List<VendaCompraLojaVirtual> vendaPorData(Date dataInicio, Date dataFim);
+
+
+    @Query(value="select distinct(i.vendaCompraLojaVirtual) from ItemVendaLoja i "
+            + " where i.vendaCompraLojaVirtual.excluido = false and upper(trim(i.vendaCompraLojaVirtual.pessoa.cpf)) like %?1%")
+    List<VendaCompraLojaVirtual> vendaPorCpfClienteLike(String cpf);
+
+
+    @Query(value="select distinct(i.vendaCompraLojaVirtual) from ItemVendaLoja i "
+            + " where i.vendaCompraLojaVirtual.excluido = false and upper(trim(i.vendaCompraLojaVirtual.pessoa.cpf)) = ?1")
+    List<VendaCompraLojaVirtual> vendaPorCpfClienteIgual(String cpf);
+
+
+    @Query(value="select distinct(i.vendaCompraLojaVirtual) from ItemVendaLoja i "
+            + " where i.vendaCompraLojaVirtual.excluido = false " +
+            "and upper(trim(i.vendaCompraLojaVirtual.empresa.cnpj)) = ?1")
+    List<VendaCompraLojaVirtual> vendaPorCnpjCLienteIgual(String cnpj);
+
+
+    @Query(value="select distinct(i.vendaCompraLojaVirtual) " +
+            "from ItemVendaLoja i "
+            + " where i.vendaCompraLojaVirtual.excluido = false " +
+            "and upper(trim(i.vendaCompraLojaVirtual.empresa.cnpj)) like %?1%")
+    List<VendaCompraLojaVirtual> vendaPorCnpjCLienteLike(String cnpj);
+
+//    @Modifying(flushAutomatically = true)
+//    @Query(nativeQuery = true, value = "update vd_cp_loja_virt set codigo_etiqueta = ?1 where id = ?2")
+//    void updateEtiqueta(String idEtiqueta, Long idVenda);
+//
+//    @Modifying(flushAutomatically = true)
+//    @Query(nativeQuery = true, value = "update vd_cp_loja_virt set url_imprime_etiqueta = ?1 where id = ?2")
+//    void updateURLEtiqueta(String urlEtiqueta, Long id);
+//
+//    @Modifying(flushAutomatically = true)
+//    @Query(nativeQuery = true, value = "update vd_cp_loja_virt set status_venda_loja_virtual = 'FINALIZADA' where id = ?1")
+//    void updateFinalizaVenda(Long id);
+
+
+
+
+
+
+
+
+
 }

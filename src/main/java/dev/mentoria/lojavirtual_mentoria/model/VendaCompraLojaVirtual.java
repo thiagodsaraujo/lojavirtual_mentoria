@@ -242,6 +242,4 @@ public class VendaCompraLojaVirtual implements Serializable {
         return getId().hashCode();
     }
 
-
-
 }

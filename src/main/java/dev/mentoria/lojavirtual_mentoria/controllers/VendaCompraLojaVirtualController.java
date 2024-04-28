@@ -262,7 +262,12 @@ public class VendaCompraLojaVirtualController {
             compraLojaVirtual = vendaCompraRepository.vendaPorEndEntrega(valor.toUpperCase().trim());
         }else if (tipoConsulta.equalsIgnoreCase("POR_CEP")) {
             compraLojaVirtual = vendaCompraRepository.vendaPorCep(valor.toUpperCase().trim());
+        } else if (tipoConsulta.equalsIgnoreCase("POR_CPF")) {
+            compraLojaVirtual = vendaCompraRepository.vendaPorCpfClienteIgual(valor.toUpperCase().trim());
+        } else if (tipoConsulta.equalsIgnoreCase("POR_CNPJ")) {
+            compraLojaVirtual = vendaCompraRepository.vendaPorCnpjCLienteIgual(valor.toUpperCase().trim());
         }
+
 
 
         if (compraLojaVirtual == null) {
