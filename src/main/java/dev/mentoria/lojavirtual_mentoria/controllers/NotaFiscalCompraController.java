@@ -2,7 +2,9 @@ package dev.mentoria.lojavirtual_mentoria.controllers;
 
 import dev.mentoria.lojavirtual_mentoria.ExceptionMentoriaJava;
 import dev.mentoria.lojavirtual_mentoria.model.NotaFiscalCompra;
+import dev.mentoria.lojavirtual_mentoria.model.NotaFiscalVenda;
 import dev.mentoria.lojavirtual_mentoria.repository.NotaFiscalCompraRepository;
+import dev.mentoria.lojavirtual_mentoria.repository.NotaFiscalVendaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +18,11 @@ public class NotaFiscalCompraController {
 
     private final NotaFiscalCompraRepository notaFiscalCompraRepository;
 
-    public NotaFiscalCompraController(NotaFiscalCompraRepository notaFiscalCompraRepository) {
+    private final NotaFiscalVendaRepository notaFiscalVendaRepository;;
+
+    public NotaFiscalCompraController(NotaFiscalCompraRepository notaFiscalCompraRepository, NotaFiscalVendaRepository notaFiscalVendaRepository) {
         this.notaFiscalCompraRepository = notaFiscalCompraRepository;
+        this.notaFiscalVendaRepository = notaFiscalVendaRepository;
     }
 
     @GetMapping("/listarNotasFiscais")
@@ -105,6 +110,32 @@ public class NotaFiscalCompraController {
         notaFiscalCompraRepository.deleteById(id); // deleta o pai, nessa ordem.
 
         return new ResponseEntity("Nota Fiscal deletada",HttpStatus.OK);
+    }
+
+    @GetMapping("/obterListaNotaFiscalCompraVenda/{idVenda}")
+    public ResponseEntity<List<NotaFiscalVenda>> buscarListaNotaCompraDaVenda(@PathVariable("idVenda") Long idVenda) throws ExceptionMentoriaJava {
+
+        var notaFiscalVendas = notaFiscalVendaRepository.buscaNotaPorVenda(idVenda);
+
+        if (notaFiscalVendas == null) {
+            throw new ExceptionMentoriaJava("Nota Fiscal não encontrada");
+        }
+
+        return new ResponseEntity<List<NotaFiscalVenda>>(notaFiscalVendas, HttpStatus.OK);
+
+    }
+
+    @GetMapping("/obterObjetoFiscalCompraVenda/{idVenda}")
+    public ResponseEntity<NotaFiscalVenda> buscarNotaCompraDaVenda(@PathVariable("idVenda") Long idVenda) throws ExceptionMentoriaJava {
+
+        var notaFiscalVendas = notaFiscalVendaRepository.buscaObjetoNotaPorVenda(idVenda);
+
+        if (notaFiscalVendas == null) {
+            throw new ExceptionMentoriaJava("Nota Fiscal não encontrada");
+        }
+
+        return new ResponseEntity<NotaFiscalVenda>(notaFiscalVendas, HttpStatus.OK);
+
     }
 
 

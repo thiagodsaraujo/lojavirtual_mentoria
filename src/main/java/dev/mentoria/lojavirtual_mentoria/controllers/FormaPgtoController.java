@@ -4,6 +4,7 @@ package dev.mentoria.lojavirtual_mentoria.controllers;
 import dev.mentoria.lojavirtual_mentoria.model.FormaPagamento;
 import dev.mentoria.lojavirtual_mentoria.repository.FormaPagamentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,4 +39,22 @@ public class FormaPgtoController {
 
         return ResponseEntity.ok(formaPgtoRepository.findAll());
     }
+
+    @ResponseBody
+    @GetMapping(value = "**/listaFormaPagamento")
+    public ResponseEntity<List<FormaPagamento>> listaFormaPagamento(){
+
+        return new ResponseEntity<List<FormaPagamento>>(formaPgtoRepository.findAll(), HttpStatus.OK);
+
+    }
+
+    @ResponseBody
+    @GetMapping(value = "**/listaFormaPagamento/{idEmpresa}")
+    public ResponseEntity<List<FormaPagamento>> listaFormaPagamentoidEmpresa(@PathVariable(value = "idEmpresa") Long idEmpresa){
+
+        return new ResponseEntity<List<FormaPagamento>>(formaPgtoRepository.findAll(idEmpresa), HttpStatus.OK);
+
+    }
+
+
 }

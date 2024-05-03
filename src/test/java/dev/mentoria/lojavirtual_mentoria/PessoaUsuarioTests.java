@@ -1,11 +1,14 @@
 package dev.mentoria.lojavirtual_mentoria;
 
 
+import dev.mentoria.lojavirtual_mentoria.controllers.CupomDescontoController;
+import dev.mentoria.lojavirtual_mentoria.controllers.FormaPgtoController;
 import dev.mentoria.lojavirtual_mentoria.controllers.PessoaController;
 import dev.mentoria.lojavirtual_mentoria.model.Endereco;
 import dev.mentoria.lojavirtual_mentoria.model.PessoaFisica;
 import dev.mentoria.lojavirtual_mentoria.model.PessoaJuridica;
 import dev.mentoria.lojavirtual_mentoria.model.enums.TipoEndereco;
+import dev.mentoria.lojavirtual_mentoria.repository.CupomDescontoRepository;
 import dev.mentoria.lojavirtual_mentoria.repository.PessoaFisicaRepository;
 import dev.mentoria.lojavirtual_mentoria.repository.PessoaJuridicaRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -33,6 +36,27 @@ public class PessoaUsuarioTests {
 
     @Autowired
     private PessoaFisicaRepository pessoaFisicaRepository;
+
+    @Autowired
+    private CupomDescontoRepository cupRepository;
+
+    @Autowired
+    private CupomDescontoController cupDescontoController;
+
+    @Autowired
+    private FormaPgtoController formaPagamentoController;
+
+    @Test
+    public void testCupomDesconto() {
+        cupDescontoController.listaCupomDesc();
+        cupDescontoController.listaCupomDesc(1L);
+    }
+
+    @Test
+    public void testFormaPagamento() {
+        formaPagamentoController.listaFormaPagamento();
+        formaPagamentoController.listaFormaPagamentoidEmpresa(1L);
+    }
 
 
 

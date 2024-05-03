@@ -49,6 +49,8 @@ public interface VendaCompraLojaVirtualRepository extends JpaRepository<VendaCom
     List<VendaCompraLojaVirtual> vendaPorProduto(Long idProduto);
 
 
+
+
     @Query(value = "SELECT distinct vd.vendaCompraLojaVirtual " +
             "FROM ItemVendaLoja vd " +
             "WHERE vd.vendaCompraLojaVirtual.excluido = false " +
@@ -126,6 +128,14 @@ public interface VendaCompraLojaVirtualRepository extends JpaRepository<VendaCom
             + " where i.vendaCompraLojaVirtual.excluido = false " +
             "and upper(trim(i.vendaCompraLojaVirtual.empresa.cnpj)) like %?1%")
     List<VendaCompraLojaVirtual> vendaPorCnpjCLienteLike(String cnpj);
+
+
+    @Query(value = "SELECT itemVdLoja.vendaCompraLojaVirtual " +
+            "FROM ItemVendaLoja itemVdLoja " +
+            "WHERE itemVdLoja.vendaCompraLojaVirtual.excluido = false " +
+            "and itemVdLoja.produto.id = ?1")
+    List<VendaCompraLojaVirtual> vendaPorNotaFiscal(Long idProduto);
+
 
 //    @Modifying(flushAutomatically = true)
 //    @Query(nativeQuery = true, value = "update vd_cp_loja_virt set codigo_etiqueta = ?1 where id = ?2")
