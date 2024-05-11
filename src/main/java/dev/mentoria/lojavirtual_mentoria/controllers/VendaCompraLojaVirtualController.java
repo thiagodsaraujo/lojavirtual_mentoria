@@ -4,7 +4,9 @@ import dev.mentoria.lojavirtual_mentoria.ExceptionMentoriaJava;
 import dev.mentoria.lojavirtual_mentoria.model.*;
 import dev.mentoria.lojavirtual_mentoria.model.dto.ItemVendaDTO;
 import dev.mentoria.lojavirtual_mentoria.model.dto.VendaCompraLojaVirtualDTO;
+import dev.mentoria.lojavirtual_mentoria.model.enums.StatusContaReceber;
 import dev.mentoria.lojavirtual_mentoria.repository.*;
+import dev.mentoria.lojavirtual_mentoria.service.ServiceSendEmail;
 import dev.mentoria.lojavirtual_mentoria.service.VendaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,7 @@ import javax.validation.Valid;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -43,6 +46,12 @@ public class VendaCompraLojaVirtualController {
 
     @Autowired
     private VendaService vendaService;
+
+    @Autowired
+    private ContaReceberRepository contaReceberRepository;
+
+    @Autowired
+    private ServiceSendEmail serviceSendEmail;
 
     @GetMapping("/listarVendas")
     public ResponseEntity<List<VendaCompraLojaVirtual>> listarVendas() {
@@ -105,7 +114,7 @@ public class VendaCompraLojaVirtualController {
         notaFiscalVendaRepository.saveAndFlush(vendaCompraLojaVirtual.getNotaFiscalVenda());
 
 
-        return retornoVendaPDto(vendaCompraLojaVirtual);
+        return retornoVendaPDtoEContaReceber(vendaCompraLojaVirtual);
         // passar o objeto de retorno não é o ideial, deve escolher os dados que deve ser retornado para o cliente/tela
         // vamos preparar um dto para retornar os dados que o cliente precisa
     }
@@ -121,10 +130,10 @@ public class VendaCompraLojaVirtualController {
             vendaCompraLojaVirtual = new VendaCompraLojaVirtual();
         }
 
-        return retornoVendaPDto(vendaCompraLojaVirtual);
+        return retornoVendaPDtoEContaReceber(vendaCompraLojaVirtual);
     }
 
-    private ResponseEntity<VendaCompraLojaVirtualDTO> retornoVendaPDto(VendaCompraLojaVirtual vendaCompraLojaVirtual) {
+    private ResponseEntity<VendaCompraLojaVirtualDTO> retornoVendaPDtoEContaReceber(VendaCompraLojaVirtual vendaCompraLojaVirtual) {
         VendaCompraLojaVirtualDTO vendaCompraLojaVirtualDTO = new VendaCompraLojaVirtualDTO();
 
         vendaCompraLojaVirtualDTO.setId(vendaCompraLojaVirtual.getId());
@@ -150,6 +159,38 @@ public class VendaCompraLojaVirtualController {
             itemVendaDTO.getProduto().getNome();
             vendaCompraLojaVirtualDTO.getItemVendaLoja().add(itemVendaDTO);
         }
+
+        ContaReceber contaReceber = new ContaReceber();
+
+        contaReceber.setDescricao("Venda de produtos - Venda da Loja Virtual - " + vendaCompraLojaVirtual.getId());
+        contaReceber.setEmpresa(vendaCompraLojaVirtual.getEmpresa());
+        contaReceber.setPessoa(vendaCompraLojaVirtual.getPessoa());
+        contaReceber.setDtPagamento(Calendar.getInstance().getTime());
+        contaReceber.setDtPagamento(Calendar.getInstance().getTime());
+        contaReceber.setStatus(StatusContaReceber.QUITADA);
+        contaReceber.setValorTotal(vendaCompraLojaVirtual.getValorTotal());
+        contaReceber.setValorDesconto(vendaCompraLojaVirtual.getValorDesconto());
+
+        // Ele seta para enviar e-mail, mas tem que trocar esse meétodo que nao está funcionando, refazer esse método
+//        serviceSendEmail.enviarEmail("Venda realizada com sucesso", "Sua venda foi realizada com sucesso", vendaCompraLojaVirtual.getPessoa().getEmail());
+
+        ///*Emil para o comprador*/
+        //		StringBuilder msgemail = new StringBuilder();
+        //		msgemail.append("Olá, ").append(pessoaFisica.getNome()).append("</br>");
+        //		msgemail.append("Você realizou a compra de nº: ").append(vendaCompraLojaVirtual.getId()).append("</br>");
+        //		msgemail.append("Na loja ").append(vendaCompraLojaVirtual.getEmpresa().getNomeFantasia());
+        //		/*assunto, msg, destino*/
+        //		serviceSendEmail.enviarEmailHtml("Compra Realizada", msgemail.toString(), pessoaFisica.getEmail());
+        //
+
+        //		/*Email para o vendedor*/
+        //		msgemail = new StringBuilder();
+        //		msgemail.append("Você realizou uma venda, nº " ).append(vendaCompraLojaVirtual.getId());
+        //		serviceSendEmail.enviarEmailHtml("Venda Realizada", msgemail.toString(), vendaCompraLojaVirtual.getEmpresa().getEmail());
+
+        contaReceberRepository.saveAndFlush(contaReceber); // save só salva depois no banco, saveAndFlush salva e já retorna o objeto salvo
+
+
 
         return new ResponseEntity<VendaCompraLojaVirtualDTO>(vendaCompraLojaVirtualDTO, HttpStatus.OK);
     }

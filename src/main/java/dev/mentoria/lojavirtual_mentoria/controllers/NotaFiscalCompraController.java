@@ -33,7 +33,7 @@ public class NotaFiscalCompraController {
 
     @ResponseBody
     @PostMapping("/salvarNotaFiscal")
-    public ResponseEntity<NotaFiscalCompra> salvarNotaFiscal(@RequestBody @Valid NotaFiscalCompra notaFiscalCompra) throws ExceptionMentoriaJava {
+    public ResponseEntity<NotaFiscalCompra> salvarNotaFiscalCompra(@RequestBody @Valid NotaFiscalCompra notaFiscalCompra) throws ExceptionMentoriaJava {
 
 
         if(notaFiscalCompra.getId() == null) { // Se é um novo registro

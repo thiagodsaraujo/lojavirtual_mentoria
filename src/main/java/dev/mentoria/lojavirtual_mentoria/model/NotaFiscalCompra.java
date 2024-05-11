@@ -53,6 +53,7 @@ public class NotaFiscalCompra implements Serializable {
 
     // validar esses atributos no controller, não fica mto compatível criar validações aqui
     //usamos o targetEntity aqui para ajudar o JPA a saber qual classe de destino pois é uma herança
+    // Campo também usado para o fornecedor do produto
     @ManyToOne(targetEntity = Pessoa.class)
     @JoinColumn(name = "pessoa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_fk"))
     private PessoaJuridica pessoa;
