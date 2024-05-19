@@ -10,6 +10,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -19,6 +21,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.mail.MessagingException;
+import javax.servlet.ServletException;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.util.List;
@@ -45,15 +48,6 @@ public class ControllerExcecoes extends ResponseEntityExceptionHandler {
         return new ResponseEntity<Object>(objetoErroDTO, HttpStatus.OK);
 
     }
-
-//    @ExceptionHandler(ExceptionMentoriaJava.class)
-//    public ResponseEntity<ObjetoErroDTO> handleExceptionMentoriaJava(ExceptionMentoriaJava ex) {
-//        ObjetoErroDTO objetoErroDTO = new ObjetoErroDTO();
-//        objetoErroDTO.setError(ex.getMessage());
-//        objetoErroDTO.setCode(HttpStatus.OK.toString());
-//
-//        return ResponseEntity.status(HttpStatus.OK).body(objetoErroDTO);
-//    }
 
 
 //    Captura exceções do projeto
@@ -88,14 +82,6 @@ public class ControllerExcecoes extends ResponseEntityExceptionHandler {
         objetoErroDTO.setCode(status.value() + " ===> " + status.getReasonPhrase());
         ex.printStackTrace();
 
-//        try {
-////            Mandar e-mail para o responsável caso aconteça erro.
-//            serviceSendEmail.enviarEmailHtmlOutlook("Erro na loja virtual" , ExceptionUtils.getMessage(ex), "responsavelprojeto@gmail.com");
-//        } catch (UnsupportedEncodingException e) {
-//            throw new RuntimeException(e);
-//        } catch (MessagingException e) {
-//            throw new RuntimeException(e);
-//        }
 
 
         return new ResponseEntity<Object>(objetoErroDTO, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -129,6 +115,28 @@ public class ControllerExcecoes extends ResponseEntityExceptionHandler {
 
         return new ResponseEntity<>(objetoErroDTO, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    // Método para tratar AccessDeniedException
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex) {
+        ObjetoErroDTO objetoErroDTO = new ObjetoErroDTO();
+        objetoErroDTO.setError("Usuário não tem permissão para acessar este recurso.");
+        objetoErroDTO.setCode(HttpStatus.FORBIDDEN.toString());
+        return new ResponseEntity<>(objetoErroDTO, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(ServletException.class)
+    public ResponseEntity<Object> handleServletException(ServletException ex, WebRequest request) {
+        ObjetoErroDTO erroDTO = new ObjetoErroDTO("Erro no Servlet", HttpStatus.INTERNAL_SERVER_ERROR.toString());
+        return handleExceptionInternal(ex, erroDTO, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<Object> handleAuthenticationException(AuthenticationException ex, WebRequest request) {
+        ObjetoErroDTO erroDTO = new ObjetoErroDTO("Usuário não autenticado. Faça login para acessar este recurso.", HttpStatus.UNAUTHORIZED.toString());
+        return handleExceptionInternal(ex, erroDTO, new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
+    }
+
 
 // Código do professor
 //    @ExceptionHandler({DataIntegrityViolationException.class, ConstraintViolationException.class,

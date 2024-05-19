@@ -2,6 +2,8 @@ package dev.mentoria.lojavirtual_mentoria.model;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -18,6 +20,7 @@ public class CupomDesconto implements Serializable {
 
 
     @Column(nullable = false)
+    @NotEmpty(message = "Código do cupom não pode ser vazio")
     private String codigoCupom;
 
 
@@ -25,12 +28,13 @@ public class CupomDesconto implements Serializable {
 
     private BigDecimal valorPorcentDesconto;
 
+    @NotEmpty(message = "Data de validade do cupom não pode ser vazia")
     @Temporal(TemporalType.DATE)
     @Column(nullable = false)
     private Date dataValidadeCupom;
 
-
     @ManyToOne(targetEntity = Pessoa.class)
+    @NotEmpty(message = "Empresa não pode ser vazia, por gentileza adicione o cupom a uma empresa")
     @JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
     private Pessoa empresa;
 

@@ -3,13 +3,17 @@ package dev.mentoria.lojavirtual_mentoria.controllers;
 import dev.mentoria.lojavirtual_mentoria.ExceptionMentoriaJava;
 import dev.mentoria.lojavirtual_mentoria.model.NotaFiscalCompra;
 import dev.mentoria.lojavirtual_mentoria.model.NotaFiscalVenda;
+import dev.mentoria.lojavirtual_mentoria.model.dto.ObjetoRequisicaoRelatorioProdCompraNotaFiscalDTO;
+import dev.mentoria.lojavirtual_mentoria.model.dto.ObjetoRequisicaoRelatorioProdCompraNotaFiscalDTO;
 import dev.mentoria.lojavirtual_mentoria.repository.NotaFiscalCompraRepository;
 import dev.mentoria.lojavirtual_mentoria.repository.NotaFiscalVendaRepository;
+import dev.mentoria.lojavirtual_mentoria.service.NotaFiscalCompraService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -18,12 +22,35 @@ public class NotaFiscalCompraController {
 
     private final NotaFiscalCompraRepository notaFiscalCompraRepository;
 
-    private final NotaFiscalVendaRepository notaFiscalVendaRepository;;
+    private final NotaFiscalVendaRepository notaFiscalVendaRepository;
 
-    public NotaFiscalCompraController(NotaFiscalCompraRepository notaFiscalCompraRepository, NotaFiscalVendaRepository notaFiscalVendaRepository) {
+
+    private final NotaFiscalCompraService notaFiscalCompraService;
+
+
+    public NotaFiscalCompraController(NotaFiscalCompraRepository notaFiscalCompraRepository, NotaFiscalVendaRepository notaFiscalVendaRepository, NotaFiscalCompraService notaFiscalCompraService) {
         this.notaFiscalCompraRepository = notaFiscalCompraRepository;
         this.notaFiscalVendaRepository = notaFiscalVendaRepository;
+        this.notaFiscalCompraService = notaFiscalCompraService;
     }
+
+
+    @ResponseBody
+    @PostMapping("/relatorioProdCompraNotaFiscal")
+    public ResponseEntity<List<ObjetoRequisicaoRelatorioProdCompraNotaFiscalDTO>> relatorioProdCompraNotaFiscal(@RequestBody ObjetoRequisicaoRelatorioProdCompraNotaFiscalDTO
+                                                                                                                            objetoRequisicaoRelatorioProdCompraNotaFiscalDTO) {
+        List<ObjetoRequisicaoRelatorioProdCompraNotaFiscalDTO> retorno =
+                new ArrayList<ObjetoRequisicaoRelatorioProdCompraNotaFiscalDTO>();
+
+        retorno = notaFiscalCompraService.gerarRelatorioProdCompraNota(objetoRequisicaoRelatorioProdCompraNotaFiscalDTO);
+
+
+
+        return new ResponseEntity<List<ObjetoRequisicaoRelatorioProdCompraNotaFiscalDTO>>(retorno, HttpStatus.OK);
+
+    }
+
+
 
     @GetMapping("/listarNotasFiscais")
     public ResponseEntity<List<NotaFiscalCompra>> listarNotasFiscais() {

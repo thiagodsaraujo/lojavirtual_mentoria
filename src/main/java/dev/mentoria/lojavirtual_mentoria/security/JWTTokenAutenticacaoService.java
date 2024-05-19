@@ -105,11 +105,11 @@ public class JWTTokenAutenticacaoService {
 
             }
         } catch (SignatureException e){
-            response.getWriter().write("Token está inválido");
+            response.getWriter().write("Token está inválido! ");
 
         } catch (ExpiredJwtException e){
             // O token está expirado
-            response.getWriter().write("Token está expirado, efetue o login novamente!");
+            response.getWriter().write("Token está expirado, efetue o login novamente! ");
 
             // Remover o token inválido (opcional)
             // Você pode adicionar lógica aqui para remover o token do usuário ou tomar outras medidas necessárias.
@@ -118,13 +118,13 @@ public class JWTTokenAutenticacaoService {
             response.sendRedirect("/login");
 
         } catch (MalformedJwtException e) {
-            response.getWriter().write("Token JWT mal formado");
+            response.getWriter().write("Token JWT mal formado ");
         } catch (PrematureJwtException e) {
-            response.getWriter().write("Token JWT processado antes do momento válido");
+            response.getWriter().write("Token JWT processado antes do momento válido ");
         } catch (UnsupportedJwtException e) {
-            response.getWriter().write("Token JWT contém partes não suportadas ou não permitidas");
+            response.getWriter().write("Token JWT contém partes não suportadas ou não permitidas ");
         } catch (IllegalArgumentException e) {
-            response.getWriter().write("Argumento inválido ao processar o token JWT");
+            response.getWriter().write("Argumento inválido ao processar o token JWT ");
         } finally {
             liberacaoCors(response);
         }
