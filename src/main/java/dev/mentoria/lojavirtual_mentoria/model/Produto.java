@@ -62,7 +62,7 @@ public class Produto implements Serializable {
     @Column(nullable = false)
     private Integer qtdEstoque = 0;
 
-    @Column(name = "alerta_qtde_estoque")
+    @Column(name = "qtd_alerta_estoque")
     private Integer qtdeAlertaEstoque = 0;
 
     private String linkYoutube;

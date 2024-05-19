@@ -1,6 +1,7 @@
 package dev.mentoria.lojavirtual_mentoria.service;
 
 
+import dev.mentoria.lojavirtual_mentoria.model.dto.ObejtoRequisicaoRelatorioProdutoAlertaEstoque;
 import dev.mentoria.lojavirtual_mentoria.model.dto.ObjetoRequisicaoRelatorioProdCompraNotaFiscalDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -13,9 +14,23 @@ import java.util.List;
 @Service
 public class NotaFiscalCompraService {
 
+    //PRECISA MUDAR O NOME DOS CAMPOS NO BANCO DE DADOS E NO OBJETO, sobre quantidade de estoque, estão mto parecidos
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+
+    /**
+     * Title: Histórico de compras de produtor para a loja.
+     *
+     * Este relatório permite saber os produtos comprados para serem vendido pela loja virtual, todos os produtos tem relação com a
+     * nota fiscal de compra/venda.
+     * @param obejtoRequisicaoRelatorioProdCompraNotaFiscalDto
+     * @param dataCompra e dataFinal são parametros obrigatórios
+     * @return List<ObejtoRequisicaoRelatorioProdCompraNotaFiscalDTO>
+     *
+     * @author Thiago
+     */
     public List<ObjetoRequisicaoRelatorioProdCompraNotaFiscalDTO> gerarRelatorioProdCompraNota(
             ObjetoRequisicaoRelatorioProdCompraNotaFiscalDTO obejtoRequisicaoRelatorioProdCompraNotaFiscalDto) {
 
@@ -50,6 +65,51 @@ public class NotaFiscalCompraService {
         }
 
         retorno = jdbcTemplate.query(sql, new BeanPropertyRowMapper(ObjetoRequisicaoRelatorioProdCompraNotaFiscalDTO.class));
+
+        return retorno;
+    }
+
+    /**
+     * Este relatório retorna os produtos que estão com estoque  menor ou igual a quantidade definida no campo de qtde_alerta_estoque.
+     * @param alertaEstoque ObejtoRequisicaoRelatorioProdutoAlertaEstoque
+     * @return  List<ObejtoRequisicaoRelatorioProdutoAlertaEstoque>  Lista de Objetos ObejtoRequisicaoRelatorioProdutoAlertaEstoque
+     */
+    public List<ObejtoRequisicaoRelatorioProdutoAlertaEstoque>
+    gerarRelatorioAlertaEstoque(ObejtoRequisicaoRelatorioProdutoAlertaEstoque alertaEstoque ){
+
+        List<ObejtoRequisicaoRelatorioProdutoAlertaEstoque> retorno = new ArrayList<ObejtoRequisicaoRelatorioProdutoAlertaEstoque>();
+
+        String sql = "select p.id as codigoProduto, p.nome as nomeProduto, "
+                + " p.valor_venda as valorVendaProduto, ntp.quantidade as quantidadeComprada, "
+                + " pj.id as codigoFornecedor, pj.nome as nomeFornecedor,cfc.data_compra as dataCompra, "
+                + " p.qtd_estoque as qtdEstoque, p.qtd_alerta_estoque as qtdAlertaEstoque "
+                + " from nota_fiscal_compra as cfc "
+                + " inner join nota_item_produto as ntp on  cfc.id = nota_fiscal_compra_id "
+                + " inner join produto as p on p.id = ntp.produto_id "
+                + " inner join pessoa_juridica as pj on pj.id = cfc.pessoa_id where ";
+
+        sql += " cfc.data_compra >='"+alertaEstoque.getDataInicial()+"' and ";
+        sql += " cfc.data_compra <= '" + alertaEstoque.getDataFinal() +"' ";
+        sql += " and p.alerta_qtd_estoque = true and p.qtd_estoque <= p.qtd_alerta_estoque ";
+
+        if (!alertaEstoque.getCodigoNota().isEmpty()) {
+            sql += " and cfc.id = " + alertaEstoque.getCodigoNota() + " ";
+        }
+
+
+        if (!alertaEstoque.getCodigoProduto().isEmpty()) {
+            sql += " and p.id = " + alertaEstoque.getCodigoProduto() + " ";
+        }
+
+        if (!alertaEstoque.getNomeProduto().isEmpty()) {
+            sql += " upper(p.nome) like upper('%"+alertaEstoque.getNomeProduto()+"')";
+        }
+
+        if (!alertaEstoque.getNomeFornecedor().isEmpty()) {
+            sql += " upper(pj.nome) like upper('%"+alertaEstoque.getNomeFornecedor()+"')";
+        }
+
+        retorno = jdbcTemplate.query(sql, new BeanPropertyRowMapper(ObejtoRequisicaoRelatorioProdutoAlertaEstoque.class));
 
         return retorno;
     }
