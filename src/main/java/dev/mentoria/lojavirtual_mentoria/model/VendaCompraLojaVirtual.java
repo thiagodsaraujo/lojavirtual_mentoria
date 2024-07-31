@@ -4,6 +4,7 @@ package dev.mentoria.lojavirtual_mentoria.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import dev.mentoria.lojavirtual_mentoria.model.dto.ItemVendaDTO;
+import dev.mentoria.lojavirtual_mentoria.model.enums.StatusVendaLojaVirtual;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -90,6 +91,12 @@ public class VendaCompraLojaVirtual implements Serializable {
     @NotNull(message = "A empresa não pode ser nula")
     @JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
     private PessoaJuridica empresa;
+
+
+    @NotNull(message = "O status da venda não pode ser nulo")
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private StatusVendaLojaVirtual statusVendaLojaVirtual;
 
 
     @OneToMany(mappedBy = "vendaCompraLojaVirtual", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, targetEntity = ItemVendaLoja.class)
