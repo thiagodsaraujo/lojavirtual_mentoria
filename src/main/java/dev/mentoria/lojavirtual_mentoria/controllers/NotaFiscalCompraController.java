@@ -4,6 +4,7 @@ import dev.mentoria.lojavirtual_mentoria.ExceptionMentoriaJava;
 import dev.mentoria.lojavirtual_mentoria.model.NotaFiscalCompra;
 import dev.mentoria.lojavirtual_mentoria.model.NotaFiscalVenda;
 import dev.mentoria.lojavirtual_mentoria.model.dto.ObejtoRequisicaoRelatorioProdutoAlertaEstoque;
+import dev.mentoria.lojavirtual_mentoria.model.dto.ObjetoRelatorioStatusCompra;
 import dev.mentoria.lojavirtual_mentoria.model.dto.ObjetoRequisicaoRelatorioProdCompraNotaFiscalDTO;
 import dev.mentoria.lojavirtual_mentoria.model.dto.ObjetoRequisicaoRelatorioProdCompraNotaFiscalDTO;
 import dev.mentoria.lojavirtual_mentoria.repository.NotaFiscalCompraRepository;
@@ -35,6 +36,19 @@ public class NotaFiscalCompraController {
         this.notaFiscalCompraService = notaFiscalCompraService;
     }
 
+
+    @ResponseBody
+    @PostMapping(value = "**/relatorioStatusCompra")
+    public ResponseEntity<List<ObjetoRelatorioStatusCompra>> relatorioStatusCompra (@Valid
+                                                                                    @RequestBody  ObjetoRelatorioStatusCompra objetoRelatorioStatusCompra){
+
+        List<ObjetoRelatorioStatusCompra> retorno = new ArrayList<ObjetoRelatorioStatusCompra>();
+
+        retorno = notaFiscalCompraService.relatorioStatusVendaLojaVirtual(objetoRelatorioStatusCompra);
+
+        return new ResponseEntity<List<ObjetoRelatorioStatusCompra>>(retorno, HttpStatus.OK);
+
+    }
 
     @ResponseBody
     @PostMapping("/relatorioProdCompraNotaFiscal")
