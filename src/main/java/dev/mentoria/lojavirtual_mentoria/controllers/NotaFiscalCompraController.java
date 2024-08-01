@@ -38,7 +38,7 @@ public class NotaFiscalCompraController {
 
 
     @ResponseBody
-    @PostMapping(value = "**/relatorioStatusCompra")
+    @PostMapping(value = "**/relatorioStatusCompra") // pode pesquisar por cada atributo do dto, só colocar na requisição do json
     public ResponseEntity<List<ObjetoRelatorioStatusCompra>> relatorioStatusCompra (@Valid
                                                                                     @RequestBody  ObjetoRelatorioStatusCompra objetoRelatorioStatusCompra){
 
